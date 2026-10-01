@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
+import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_mode_status_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_row.dart';
@@ -13,17 +15,14 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prayers = ref.watch(todayPrayersProvider);
 
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+    return AppPage(
+      children: [
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 4,
           children: [
-            const Text(
-              'Faisalabad',
-              style: TextStyle(fontSize: 14, color: AppColors.textMuted),
-            ),
-            const SizedBox(height: 4),
-            const Text(
+            Text('Faisalabad', style: AppText.body),
+            Text(
               '30 September 2026',
               style: TextStyle(
                 fontSize: 20,
@@ -31,22 +30,19 @@ class HomeScreen extends ConsumerWidget {
                 color: AppColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 16),
-            const NextPrayerCard(
-              name: 'Maghrib',
-              time: '6:05 PM',
-              countdown: 'Starts in 42 min',
-            ),
-            const SizedBox(height: 16),
-            for (final prayer in prayers) ...[
-              PrayerRow(entry: prayer),
-              const SizedBox(height: 8),
-            ],
-            const SizedBox(height: 8),
-            const PrayerModeStatusCard(appCount: 4),
           ],
         ),
-      ),
+        const NextPrayerCard(
+          name: 'Maghrib',
+          time: '6:05 PM',
+          countdown: 'Starts in 42 min',
+        ),
+        Column(
+          spacing: 8,
+          children: [for (final prayer in prayers) PrayerRow(entry: prayer)],
+        ),
+        const PrayerModeStatusCard(appCount: 4),
+      ],
     );
   }
 }

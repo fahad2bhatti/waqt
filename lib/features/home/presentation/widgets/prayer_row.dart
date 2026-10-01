@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waqt/app/theme/app_colors.dart';
+import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/features/prayer_times/data/prayer_entry.dart';
 
 class PrayerRow extends StatelessWidget {
@@ -9,36 +10,22 @@ class PrayerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isNext = entry.status == PrayerStatus.next;
     final (label, color) = switch (entry.status) {
       PrayerStatus.prayed => ('Prayed', AppColors.green),
       PrayerStatus.next => ('Next', AppColors.gold),
       PrayerStatus.pending => ('Pending', AppColors.textMuted),
     };
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: isNext ? AppColors.line : AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
+    return AppRow(
+      label: entry.name,
+      highlight: entry.status == PrayerStatus.next,
+      trailing: Row(
+        spacing: 12,
         children: [
-          Expanded(
-            child: Text(
-              entry.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
           Text(
             entry.time,
             style: const TextStyle(fontSize: 15, color: AppColors.textPrimary),
           ),
-          const SizedBox(width: 12),
           Text(
             label,
             style: TextStyle(
