@@ -7,6 +7,7 @@ class OnboardingStep {
     required this.body,
     required this.primary,
     this.secondary,
+    this.secondaryRoute,
     this.rows = const [],
     this.rowColor = AppColors.textMuted,
   });
@@ -15,6 +16,7 @@ class OnboardingStep {
   final String body;
   final String primary;
   final String? secondary;
+  final String? secondaryRoute;
   final List<(String, String)> rows;
   final Color rowColor;
 }
@@ -31,6 +33,7 @@ const onboardingSteps = [
         'We calculate Salah times on your phone from your location. Nothing is uploaded.',
     primary: 'Allow location',
     secondary: 'Choose city manually',
+    secondaryRoute: '/city-search',
   ),
   OnboardingStep(
     title: 'Calculation settings',

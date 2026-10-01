@@ -78,7 +78,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const Spacer(),
               FilledButton(onPressed: _next, child: Text(step.primary)),
               if (step.secondary != null)
-                TextButton(onPressed: _next, child: Text(step.secondary!)),
+                TextButton(
+                  onPressed: step.secondaryRoute == null
+                      ? _next
+                      : () => context.push(step.secondaryRoute!),
+                  child: Text(step.secondary!),
+                ),
             ],
           ),
         ),

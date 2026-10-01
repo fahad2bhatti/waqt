@@ -4,6 +4,7 @@ import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
+import 'package:waqt/core/widgets/info_card.dart';
 import 'package:waqt/features/health_check/providers/health_check_provider.dart';
 
 class HealthCheckScreen extends ConsumerWidget {
@@ -23,30 +24,9 @@ class HealthCheckScreen extends ConsumerWidget {
             'Everything Waqt needs to reach you on time.',
             style: AppText.body,
           ),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.hero,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4,
-              children: [
-                Text(
-                  '$ready of ${checks.length} ready',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.gold,
-                  ),
-                ),
-                const Text(
-                  'Fix the rest for reliable Azan.',
-                  style: AppText.body,
-                ),
-              ],
-            ),
+          InfoCard(
+            title: '$ready of ${checks.length} ready',
+            body: 'Fix the rest for reliable Azan.',
           ),
           Column(
             spacing: 8,

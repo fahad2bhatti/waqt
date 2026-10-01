@@ -7,6 +7,8 @@ import 'package:waqt/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_mode_status_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_row.dart';
 import 'package:waqt/features/home/providers/home_provider.dart';
+import 'package:waqt/features/prayer_mode/providers/blocked_apps_provider.dart';
+import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -14,15 +16,17 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final prayers = ref.watch(todayPrayersProvider);
+    final city = ref.watch(cityProvider);
+    final appCount = ref.watch(blockedAppsProvider).length;
 
     return AppPage(
       children: [
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 4,
           children: [
-            Text('Faisalabad', style: AppText.body),
-            Text(
+            Text(city, style: AppText.body),
+            const Text(
               '30 September 2026',
               style: TextStyle(
                 fontSize: 20,
@@ -41,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
           spacing: 8,
           children: [for (final prayer in prayers) PrayerRow(entry: prayer)],
         ),
-        const PrayerModeStatusCard(appCount: 4),
+        PrayerModeStatusCard(appCount: appCount),
       ],
     );
   }
