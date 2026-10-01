@@ -11,6 +11,7 @@ class AppRow extends StatelessWidget {
     this.labelColor,
     this.trailing,
     this.highlight = false,
+    this.onTap,
   });
 
   final String label;
@@ -19,33 +20,38 @@ class AppRow extends StatelessWidget {
   final Color? labelColor;
   final Widget? trailing;
   final bool highlight;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: trailing == null ? 14 : 9,
-      ),
-      decoration: BoxDecoration(
-        color: highlight ? AppColors.line : AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        spacing: 12,
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: labelColor == null
-                  ? AppText.rowLabel
-                  : AppText.rowLabel.copyWith(color: labelColor),
-            ),
+    return Material(
+      color: highlight ? AppColors.line : AppColors.card,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: trailing == null ? 14 : 9,
           ),
-          if (value != null)
-            Text(value!, style: TextStyle(fontSize: 14, color: valueColor)),
-          ?trailing,
-        ],
+          child: Row(
+            spacing: 12,
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: labelColor == null
+                      ? AppText.rowLabel
+                      : AppText.rowLabel.copyWith(color: labelColor),
+                ),
+              ),
+              if (value != null)
+                Text(value!, style: TextStyle(fontSize: 14, color: valueColor)),
+              ?trailing,
+            ],
+          ),
+        ),
       ),
     );
   }

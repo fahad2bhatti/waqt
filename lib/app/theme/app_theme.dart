@@ -10,12 +10,46 @@ abstract final class AppTheme {
       onSurface: AppColors.textPrimary,
       error: AppColors.danger,
     );
+    final buttonShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+    );
+    const buttonText = TextStyle(fontSize: 17, fontWeight: FontWeight.w600);
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.background,
       fontFamily: 'Inter',
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.background,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: AppColors.textPrimary,
+        scrolledUnderElevation: 0,
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(56),
+          backgroundColor: AppColors.green,
+          foregroundColor: Colors.white,
+          textStyle: buttonText,
+          shape: buttonShape,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size.fromHeight(56),
+          foregroundColor: AppColors.textPrimary,
+          side: const BorderSide(color: AppColors.line, width: 1.5),
+          textStyle: buttonText,
+          shape: buttonShape,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.textMuted,
+          textStyle: const TextStyle(fontSize: 15),
+        ),
+      ),
       navigationBarTheme: NavigationBarThemeData(
         height: 64,
         backgroundColor: AppColors.card,
