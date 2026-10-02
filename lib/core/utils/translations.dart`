@@ -1,0 +1,49 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waqt/features/settings/providers/language_provider.dart';
+
+class TranslationService {
+  static const Map<String, Map<String, String>> _localizedValues = {
+    'app_title': {
+      'en': 'Waqt',
+      'ur': 'وقت',
+    },
+    'home_title': {
+      'en': 'Home',
+      'ur': 'ہوم',
+    },
+    'prayer_mode': {
+      'en': 'Prayer Mode',
+      'ur': 'نماز موڈ',
+    },
+    'stats': {
+      'en': 'Stats',
+      'ur': 'اعداد و شمار',
+    },
+    'settings': {
+      'en': 'Settings',
+      'ur': 'سیٹنگز',
+    },
+    'qibla': {
+      'en': 'Qibla',
+      'ur': 'قبلہ',
+    },
+    'azan_playing': {
+      'en': 'Azan is playing',
+      'ur': 'اذان ہو رہی ہے',
+    },
+    'i_prayed': {
+      'en': 'I Prayed',
+      'ur': 'میں نے نماز پڑھ لی',
+    },
+  };
+
+  static String translate(String key, String language) {
+    final lang = language == 'Urdu' ? 'ur' : 'en';
+    return _localizedValues[key]?[lang] ?? key;
+  }
+}
+
+final translationProvider = Provider<String Function(String)>((ref) {
+  final language = ref.watch(languageProvider);
+  return (key) => TranslationService.translate(key, language);
+});

@@ -5,6 +5,7 @@ import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/info_card.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/providers/prayer_times_provider.dart';
 import 'package:waqt/features/tracking/presentation/widgets/month_calendar.dart';
 import 'package:waqt/features/tracking/providers/prayer_log_provider.dart';
@@ -15,6 +16,7 @@ class PrayerLogScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
     final today = ref.watch(todayProvider);
     final log = ref.watch(prayerLogProvider);
     final streak = ref.watch(streakProvider);
@@ -23,12 +25,12 @@ class PrayerLogScreen extends ConsumerWidget {
       appBar: AppBar(),
       body: AppPage(
         children: [
-          const Text('Prayer log', style: AppText.title),
+          Text(t('prayer_log'), style: AppText.title),
           InfoCard(
-            title: '$streak day streak',
+            title: '$streak ${t('streak_day')}',
             body: streak == 0
-                ? 'Log all 5 prayers today to start a streak'
-                : 'All 5 prayers logged',
+                ? t('streak_start')
+                : t('streak_complete'),
           ),
           Text(DateFormat('MMMM y').format(today), style: AppText.caption),
           MonthCalendar(month: today, today: today, log: log),

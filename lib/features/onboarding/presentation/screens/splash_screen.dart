@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/core/widgets/brand_icon.dart';
+import 'package:waqt/core/utils/translations.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -35,18 +36,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final t = ref.watch(translationProvider);
+
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
-            BrandIcon(),
+            const BrandIcon(),
             Text(
-              'Waqt',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
+              t('app_title'),
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
             ),
-            Text('Make time for prayer', style: AppText.body),
+            Text(t('make_time'), style: AppText.body),
           ],
         ),
       ),

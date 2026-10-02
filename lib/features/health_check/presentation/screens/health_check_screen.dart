@@ -5,6 +5,7 @@ import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/info_card.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/health_check/providers/health_check_provider.dart';
 
 class HealthCheckScreen extends ConsumerWidget {
@@ -12,6 +13,7 @@ class HealthCheckScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
     final checks = ref.watch(healthChecksProvider);
     final lastFired = ref.watch(lastAzanFiredProvider).value;
     final ready = checks.where((check) => check.ok).length;
@@ -20,16 +22,16 @@ class HealthCheckScreen extends ConsumerWidget {
       appBar: AppBar(),
       body: AppPage(
         children: [
-          const Text('Azan protection', style: AppText.title),
-          const Text(
-            'Everything Waqt needs to reach you on time.',
+          Text(t('azan_protection'), style: AppText.title),
+          Text(
+            t('protection_desc'),
             style: AppText.body,
           ),
           InfoCard(
-            title: '$ready of ${checks.length} ready',
+            title: '$ready of ${checks.length} ${t('health_ready')}',
             body: ready == checks.length
-                ? 'Azan will reach you on time.'
-                : 'Fix the rest for reliable Azan.',
+                ? t('health_ok')
+                : t('health_fix'),
           ),
           Column(
             spacing: 8,
@@ -37,7 +39,7 @@ class HealthCheckScreen extends ConsumerWidget {
               for (final check in checks)
                 AppRow(
                   label: check.label,
-                  value: check.ok ? 'On' : 'Fix',
+                  value: check.ok ? t('health_ok') : t('health_not_ok'),
                   valueColor: check.ok ? AppColors.green : AppColors.gold,
                   onTap: check.ok
                       ? null

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/core/utils/time_format.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/data/prayer_calculator.dart';
 import 'package:waqt/features/prayer_times/data/prayer_entry.dart';
 import 'package:waqt/features/prayer_times/providers/prayer_times_provider.dart';
@@ -15,7 +16,7 @@ final todayPrayersProvider = Provider<List<PrayerEntry>>((ref) {
   return [
     for (final slot in slots)
       PrayerEntry(
-        name: slot.name,
+        name: ref.watch(translationProvider)(slot.name),
         time: formatTime(slot.time),
         logKey: logKey(today, slot.name),
         started: !slot.time.isAfter(now),

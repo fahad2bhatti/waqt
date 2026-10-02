@@ -1,20 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
   @override
+  ConsumerState<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends ConsumerState<AppShell> {
+  static const _blockerChannel = MethodChannel('com.waqt/prayer_blocker');
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Listen for the "onAppBlocked" signal from MainActivity.kt
+    _blockerChannel.setMethodCallHandler((call) async {
+      if (call.method == 'onAppBlocked') {
+        // User ko overlay screen par bhej do
+        context.push('/overlay-preview');
+      }
+      return null;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigationShell,
+      body: widget.navigationShell,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) => navigationShell.goBranch(
+        selectedIndex: widget.navigationShell.currentIndex,
+        onDestinationSelected: (index) => widget.navigationShell.goBranch(
           index,
-          initialLocation: index == navigationShell.currentIndex,
+          initialLocation: index == widget.navigationShell.currentIndex,
         ),
         destinations: const [
           NavigationDestination(

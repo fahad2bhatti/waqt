@@ -5,6 +5,7 @@ import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/presentation/widgets/delete_data_dialog.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
@@ -22,6 +23,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
     final city = ref.watch(cityProvider);
     final adjusted = ref
         .watch(adjustmentsProvider)
@@ -32,8 +34,8 @@ class SettingsScreen extends ConsumerWidget {
 
     return AppPage(
       children: [
-        const Text('Settings', style: AppText.title),
-        const Text('PRAYER TIMES', style: AppText.label),
+        Text(t('settings'), style: AppText.title),
+        Text('PRAYER TIMES', style: AppText.label),
         Column(
           spacing: 8,
           children: [
@@ -60,12 +62,12 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const Text('AZAN AND MODE', style: AppText.label),
+        Text('AZAN AND MODE', style: AppText.label),
         Column(
           spacing: 8,
           children: [
             AppRow(
-              label: 'Azan sound',
+              label: t('azan_sound'),
               value: sound,
               onTap: () => context.push('/azan-sound'),
             ),
@@ -76,22 +78,22 @@ class SettingsScreen extends ConsumerWidget {
               valueColor: AppColors.gold,
               onTap: () => context.push('/health-check'),
             ),
-            AppRow(label: 'Qibla', onTap: () => context.push('/qibla')),
+            AppRow(label: t('qibla'), onTap: () => context.push('/qibla')),
           ],
         ),
-        const Text('APP', style: AppText.label),
+        Text('APP', style: AppText.label),
         Column(
           spacing: 8,
           children: [
             AppRow(
-              label: 'Language',
+              label: t('language'),
               value: language,
               onTap: () => context.push('/language'),
             ),
             const AppRow(label: 'Theme', value: 'Dark'),
-            AppRow(label: 'About', onTap: () => context.push('/about')),
+            AppRow(label: t('about'), onTap: () => context.push('/about')),
             AppRow(
-              label: 'Delete all my data',
+              label: t('delete_data'),
               labelColor: AppColors.danger,
               onTap: () => _deleteAll(context, ref),
             ),

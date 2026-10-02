@@ -2,11 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waqt/app/app.dart';
 import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/firebase_options.dart';
+
+const MethodChannel blockerChannel = MethodChannel('com.waqt/prayer_blocker');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,4 +36,12 @@ Future<void> main() async {
       child: const WaqtApp(),
     ),
   );
+
+  // Prayer Mode Blocker Bridge
+  blockerChannel.setMethodCallHandler((call) async {
+    if (call.method == "checkApp") {
+      return "ALLOW";
+    }
+    return null;
+  });
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/core/utils/time_format.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/data/prayer_calculator.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
@@ -62,12 +63,11 @@ final selectedDateProvider = NotifierProvider<SelectedDateNotifier, DateTime>(
 
 final dayTimesProvider = Provider<List<(String, String)>>((ref) {
   final times = ref.watch(prayerTimesProvider(ref.watch(selectedDateProvider)));
+  final slots = prayerSlots(times);
+  final t = ref.watch(translationProvider);
+
   return [
-    ('Fajr', formatTime(times.fajr.toLocal())),
-    ('Sunrise', formatTime(times.sunrise.toLocal())),
-    ('Dhuhr', formatTime(times.dhuhr.toLocal())),
-    ('Asr', formatTime(times.asr.toLocal())),
-    ('Maghrib', formatTime(times.maghrib.toLocal())),
-    ('Isha', formatTime(times.isha.toLocal())),
+    for (final slot in slots)
+      (t(slot.name), formatTime(slot.time.toLocal())),
   ];
 });

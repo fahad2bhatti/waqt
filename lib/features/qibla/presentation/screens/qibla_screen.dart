@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/utils/translations.dart';
 
-class QiblaScreen extends StatelessWidget {
+class QiblaScreen extends ConsumerWidget {
   const QiblaScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
+
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -14,7 +18,7 @@ class QiblaScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 24,
           children: [
-            const Text('Qibla', style: AppText.title),
+            Text(t('qibla'), style: AppText.title),
             Container(
               width: 280,
               height: 280,
@@ -40,7 +44,7 @@ class QiblaScreen extends StatelessWidget {
                 color: AppColors.textPrimary,
               ),
             ),
-            const Text('Turn until the marker points up', style: AppText.body),
+            Text(t('calibrate_compass'), style: AppText.body),
           ],
         ),
       ),

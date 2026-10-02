@@ -4,27 +4,29 @@ import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/settings/providers/azan_sound_provider.dart';
-
-const _sounds = ['Makkah', 'Madinah', 'Al-Aqsa', 'Short tone'];
 
 class AzanSoundScreen extends ConsumerWidget {
   const AzanSoundScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
     final state = ref.watch(azanSoundProvider);
     final notifier = ref.read(azanSoundProvider.notifier);
+
+    final sounds = ['Makkah', 'Madinah', 'Al-Aqsa', 'Short tone'];
 
     return Scaffold(
       appBar: AppBar(),
       body: AppPage(
         children: [
-          const Text('Azan sound', style: AppText.title),
+          Text(t('azan_sound'), style: AppText.title),
           Column(
             spacing: 8,
             children: [
-              for (final sound in _sounds)
+              for (final sound in sounds)
                 AppRow(
                   label: sound,
                   value: sound == state.sound ? 'Selected' : 'Select',

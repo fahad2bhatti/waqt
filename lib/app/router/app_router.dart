@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:waqt/app/shell/app_shell.dart';
+import 'package:waqt/features/azan/presentation/screens/azan_screen.dart';
 import 'package:waqt/features/health_check/presentation/screens/health_check_screen.dart';
 import 'package:waqt/features/home/presentation/screens/home_screen.dart';
 import 'package:waqt/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -23,6 +24,7 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
     GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
+    GoRoute(path: '/azan', builder: (_, _) => const AzanScreen()),
     GoRoute(
       path: '/health-check',
       builder: (_, _) => const HealthCheckScreen(),
