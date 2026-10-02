@@ -23,8 +23,8 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
     final query = _query.toLowerCase();
     final results = [
       for (final city in cities)
-        if (city.$1.toLowerCase().contains(query) ||
-            city.$2.toLowerCase().contains(query))
+        if (city.name.toLowerCase().contains(query) ||
+            city.country.toLowerCase().contains(query))
           city,
     ];
 
@@ -52,12 +52,12 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
                   itemCount: results.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (_, index) {
-                    final (name, country, timezone) = results[index];
+                    final city = results[index];
                     return AppRow(
-                      label: '$name, $country',
-                      value: timezone,
+                      label: '${city.name}, ${city.country}',
+                      value: city.timezone,
                       onTap: () {
-                        ref.read(cityProvider.notifier).select(name);
+                        ref.read(cityProvider.notifier).select(city);
                         context.pop();
                       },
                     );

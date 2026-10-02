@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
@@ -13,12 +14,13 @@ class TimesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final times = ref.watch(dayTimesProvider);
+    final selected = ref.watch(selectedDateProvider);
 
     return AppPage(
       children: [
         const Text('Prayer times', style: AppText.title),
         const WeekStrip(),
-        const Text('Wednesday, 30 September', style: AppText.body),
+        Text(DateFormat('EEEE, d MMMM').format(selected), style: AppText.body),
         Column(
           spacing: 8,
           children: [

@@ -32,7 +32,7 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             AppRow(
               label: 'Location',
-              value: city,
+              value: city.name,
               valueColor: AppColors.gold,
               onTap: () => context.push('/city-search'),
             ),

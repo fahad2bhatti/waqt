@@ -1,41 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/features/prayer_times/providers/prayer_times_provider.dart';
 
-class WeekStrip extends StatefulWidget {
+const _letters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+class WeekStrip extends ConsumerWidget {
   const WeekStrip({super.key});
 
   @override
-  State<WeekStrip> createState() => _WeekStripState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final today = ref.watch(todayProvider);
+    final selected = ref.watch(selectedDateProvider);
+    final weekStart = today.day - (today.weekday - 1);
+    final days = [
+      for (var i = 0; i < 7; i++)
+        DateTime(today.year, today.month, weekStart + i),
+    ];
 
-class _WeekStripState extends State<WeekStrip> {
-  static const _days = [
-    ('M', 28),
-    ('T', 29),
-    ('W', 30),
-    ('T', 1),
-    ('F', 2),
-    ('S', 3),
-    ('S', 4),
-  ];
-
-  int _selected = 2;
-
-  @override
-  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        for (var i = 0; i < _days.length; i++)
+        for (var i = 0; i < 7; i++)
           GestureDetector(
-            onTap: () => setState(() => _selected = i),
+            onTap: () =>
+                ref.read(selectedDateProvider.notifier).select(days[i]),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
               decoration: BoxDecoration(
-                color: i == _selected ? AppColors.hero : AppColors.card,
+                color: days[i] == selected ? AppColors.hero : AppColors.card,
                 borderRadius: BorderRadius.circular(14),
-                border: i == _selected
+                border: days[i] == selected
                     ? Border.all(color: AppColors.gold, width: 1.5)
                     : null,
               ),
@@ -43,16 +39,16 @@ class _WeekStripState extends State<WeekStrip> {
                 spacing: 4,
                 children: [
                   Text(
-                    _days[i].$1,
+                    _letters[i],
                     style: const TextStyle(
                       fontSize: 11,
                       color: AppColors.textMuted,
                     ),
                   ),
                   Text(
-                    '${_days[i].$2}',
+                    '${days[i].day}',
                     style: AppText.rowLabel.copyWith(
-                      color: i == _selected
+                      color: days[i] == selected
                           ? AppColors.gold
                           : AppColors.textPrimary,
                     ),

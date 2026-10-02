@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waqt/features/prayer_times/data/cities.dart';
 
-class CityNotifier extends Notifier<String> {
+class CityNotifier extends Notifier<City> {
   @override
-  String build() => 'Faisalabad';
+  City build() => cities.first;
 
-  void select(String city) => state = city;
+  void select(City city) => state = city;
 }
 
-final cityProvider = NotifierProvider<CityNotifier, String>(CityNotifier.new);
+final cityProvider = NotifierProvider<CityNotifier, City>(CityNotifier.new);
