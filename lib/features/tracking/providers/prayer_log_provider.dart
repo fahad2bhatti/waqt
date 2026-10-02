@@ -13,8 +13,19 @@ class PrayerLogNotifier extends Notifier<Set<String>> {
 
   void toggle(String key) {
     state = state.contains(key) ? ({...state}..remove(key)) : {...state, key};
-    ref.read(prefsProvider).setStringList(PrefKeys.prayerLog, state.toList());
+    _save();
   }
+
+  /// Adds [keys] as prayed. Never un-marks, so it is safe to call repeatedly.
+  void markPrayed(Iterable<String> keys) {
+    final merged = {...state, ...keys};
+    if (merged.length == state.length) return;
+    state = merged;
+    _save();
+  }
+
+  void _save() =>
+      ref.read(prefsProvider).setStringList(PrefKeys.prayerLog, state.toList());
 }
 
 final prayerLogProvider = NotifierProvider<PrayerLogNotifier, Set<String>>(

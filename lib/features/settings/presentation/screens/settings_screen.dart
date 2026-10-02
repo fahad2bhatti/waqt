@@ -6,12 +6,19 @@ import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
+import 'package:waqt/features/settings/presentation/widgets/delete_data_dialog.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
 import 'package:waqt/features/settings/providers/azan_sound_provider.dart';
 import 'package:waqt/features/settings/providers/language_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _deleteAll(BuildContext context, WidgetRef ref) async {
+    if (!await confirmDeleteAllData(context)) return;
+    await deleteAllData(ref);
+    if (context.mounted) context.go('/splash');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,9 +90,10 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const AppRow(label: 'Theme', value: 'Dark'),
             AppRow(label: 'About', onTap: () => context.push('/about')),
-            const AppRow(
+            AppRow(
               label: 'Delete all my data',
               labelColor: AppColors.danger,
+              onTap: () => _deleteAll(context, ref),
             ),
           ],
         ),

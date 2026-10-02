@@ -16,6 +16,7 @@ import 'package:waqt/features/settings/presentation/screens/azan_sound_screen.da
 import 'package:waqt/features/settings/presentation/screens/language_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/settings_screen.dart';
 import 'package:waqt/features/stats/presentation/screens/stats_screen.dart';
+import 'package:waqt/features/tracking/presentation/screens/prayer_log_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/splash',
@@ -37,6 +38,7 @@ final appRouter = GoRouter(
     GoRoute(path: '/azan-sound', builder: (_, _) => const AzanSoundScreen()),
     GoRoute(path: '/language', builder: (_, _) => const LanguageScreen()),
     GoRoute(path: '/about', builder: (_, _) => const AboutScreen()),
+    GoRoute(path: '/prayer-log', builder: (_, _) => const PrayerLogScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => AppShell(navigationShell: shell),
       branches: [

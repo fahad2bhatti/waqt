@@ -13,7 +13,8 @@ class HealthCheckScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final checks = ref.watch(healthChecksProvider);
-    final ready = checks.where((check) => check.$2).length;
+    final lastFired = ref.watch(lastAzanFiredProvider).value;
+    final ready = checks.where((check) => check.ok).length;
 
     return Scaffold(
       appBar: AppBar(),
@@ -26,20 +27,30 @@ class HealthCheckScreen extends ConsumerWidget {
           ),
           InfoCard(
             title: '$ready of ${checks.length} ready',
-            body: 'Fix the rest for reliable Azan.',
+            body: ready == checks.length
+                ? 'Azan will reach you on time.'
+                : 'Fix the rest for reliable Azan.',
           ),
           Column(
             spacing: 8,
             children: [
-              for (final (name, ok) in checks)
+              for (final check in checks)
                 AppRow(
-                  label: name,
-                  value: ok ? 'On' : 'Fix',
-                  valueColor: ok ? AppColors.green : AppColors.gold,
+                  label: check.label,
+                  value: check.ok ? 'On' : 'Fix',
+                  valueColor: check.ok ? AppColors.green : AppColors.gold,
+                  onTap: check.ok
+                      ? null
+                      : () => ref
+                            .read(deviceHealthProvider)
+                            .openSettings(check.permission),
                 ),
             ],
           ),
-          const Text('Last Azan fired: today, 4:45 AM', style: AppText.caption),
+          Text(
+            formatLastFired(lastFired, DateTime.now()),
+            style: AppText.caption,
+          ),
         ],
       ),
     );
