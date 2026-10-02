@@ -12,6 +12,7 @@ import 'package:waqt/features/home/providers/home_provider.dart';
 import 'package:waqt/features/prayer_mode/providers/blocked_apps_provider.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/prayer_times/providers/prayer_times_provider.dart';
+import 'package:waqt/features/tracking/providers/prayer_log_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -23,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final prayers = ref.watch(todayPrayersProvider);
     final city = ref.watch(cityProvider);
     final appCount = ref.watch(blockedAppsProvider).length;
+    final log = ref.read(prayerLogProvider.notifier);
 
     return AppPage(
       children: [
@@ -48,7 +50,13 @@ class HomeScreen extends ConsumerWidget {
         ),
         Column(
           spacing: 8,
-          children: [for (final prayer in prayers) PrayerRow(entry: prayer)],
+          children: [
+            for (final prayer in prayers)
+              PrayerRow(
+                entry: prayer,
+                onTap: prayer.started ? () => log.toggle(prayer.logKey) : null,
+              ),
+          ],
         ),
         PrayerModeStatusCard(appCount: appCount),
       ],

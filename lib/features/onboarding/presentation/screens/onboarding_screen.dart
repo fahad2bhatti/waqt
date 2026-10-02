@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/brand_icon.dart';
 import 'package:waqt/features/onboarding/data/onboarding_steps.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _step = 0;
 
   void _next() {
     if (_step == onboardingSteps.length - 1) {
+      ref.read(prefsProvider).setBool(PrefKeys.onboarded, true);
       context.go('/home');
     } else {
       setState(() => _step++);

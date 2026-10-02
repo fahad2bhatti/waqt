@@ -4,9 +4,10 @@ import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/features/prayer_times/data/prayer_entry.dart';
 
 class PrayerRow extends StatelessWidget {
-  const PrayerRow({super.key, required this.entry});
+  const PrayerRow({super.key, required this.entry, this.onTap});
 
   final PrayerEntry entry;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class PrayerRow extends StatelessWidget {
     return AppRow(
       label: entry.name,
       highlight: entry.status == PrayerStatus.next,
+      onTap: onTap,
       trailing: Row(
         spacing: 12,
         children: [

@@ -13,12 +13,13 @@ class StatsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bars = ref.watch(weekBarsProvider);
+    final percent = ref.watch(weekPercentProvider);
     final prayers = ref.watch(perPrayerProvider);
 
     return AppPage(
       children: [
         const Text('Your week', style: AppText.title),
-        WeekCard(percent: 89, bars: bars),
+        WeekCard(percent: percent, bars: bars),
         const Text('PER PRAYER', style: AppText.label),
         Column(
           spacing: 8,

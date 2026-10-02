@@ -53,3 +53,4 @@ key.properties
 *.jks
 *.keystore
 web/
+lib/firebase_options.dart
