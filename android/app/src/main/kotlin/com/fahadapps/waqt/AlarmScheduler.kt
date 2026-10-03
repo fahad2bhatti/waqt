@@ -39,11 +39,6 @@ object AlarmScheduler {
         arm(context, slots)
     }
 
-    fun scheduleAlarm(context: Context, seconds: Int) {
-        val at = System.currentTimeMillis() + seconds * 1000L
-        schedule(context, listOf(AzanSlot("Test", at)))
-    }
-
     fun rescheduleFromStorage(context: Context) {
         arm(context, load(context))
     }
@@ -152,7 +147,8 @@ object AlarmScheduler {
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        val prayed = actionIntent(context, id, ACTION_PRAYED, "$dayKey|$name")
+        val logName = if (name == "jummah") "Dhuhr" else name
+        val prayed = actionIntent(context, id, ACTION_PRAYED, "$dayKey|$logName")
         val dismiss = actionIntent(context, id + 1, ACTION_DISMISS, null, id)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)

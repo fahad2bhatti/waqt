@@ -28,7 +28,9 @@ class PrayerLogScreen extends ConsumerWidget {
           Text(t('prayer_log'), style: AppText.title),
           InfoCard(
             title: '$streak ${t('streak_day')}',
-            body: streak == 0 ? t('streak_start') : t('streak_complete'),
+            body: streak == 0
+                ? t('streak_start')
+                : t('streak_complete'),
           ),
           Text(DateFormat('MMMM y').format(today), style: AppText.caption),
           MonthCalendar(month: today, today: today, log: log),

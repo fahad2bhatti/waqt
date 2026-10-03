@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -59,9 +60,10 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
 
-                    "scheduleAlarm" -> {
+                    "scheduleTest" -> {
                         val seconds = call.argument<Int>("seconds") ?: 60
-                        AlarmScheduler.scheduleAlarm(this, seconds)
+                        val at = System.currentTimeMillis() + seconds * 1000L
+                        AlarmScheduler.schedule(this, listOf(AzanSlot("Test", at)))
                         result.success(null)
                     }
 

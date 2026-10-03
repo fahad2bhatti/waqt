@@ -51,7 +51,7 @@ class HealthCheckScreen extends ConsumerWidget {
               try {
                 await const MethodChannel(
                   'com.fahadapps.waqt/azan',
-                ).invokeMethod('scheduleAlarm', 10);
+                ).invokeMethod('scheduleTest', {'seconds': 10});
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
