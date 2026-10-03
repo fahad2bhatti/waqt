@@ -26,6 +26,7 @@ object AlarmScheduler {
     private const val KEY_SLOTS = "slots"
     private const val KEY_PENDING_PRAYED = "pending_prayed"
     private const val MAX_SLOTS = 64
+    private const val TEST_REQUEST_CODE = MAX_SLOTS
     private const val GOLD = 0xFFD9B26B // AppColors.gold
 
     const val CHANNEL_ID = "azan"
@@ -37,6 +38,21 @@ object AlarmScheduler {
         cancelAll(context)
         save(context, slots)
         arm(context, slots)
+    }
+
+    fun scheduleTestAlarm(context: Context, seconds: Int) {
+        val slot = AzanSlot("Test", System.currentTimeMillis() + seconds * 1000L)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val showIntent = PendingIntent.getActivity(
+            context,
+            0,
+            Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+        alarmManager.setAlarmClock(
+            AlarmManager.AlarmClockInfo(slot.millis, showIntent),
+            pendingFor(context, TEST_REQUEST_CODE, slot),
+        )
     }
 
     fun rescheduleFromStorage(context: Context) {
@@ -71,6 +87,9 @@ object AlarmScheduler {
             alarmManager.cancel(pending)
             pending.cancel()
         }
+        val testPending = pendingFor(context, TEST_REQUEST_CODE, AzanSlot("", 0L))
+        alarmManager.cancel(testPending)
+        testPending.cancel()
     }
 
     fun clear(context: Context) {

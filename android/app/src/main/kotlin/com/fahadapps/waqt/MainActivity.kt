@@ -62,8 +62,7 @@ class MainActivity : FlutterActivity() {
 
                     "scheduleTest" -> {
                         val seconds = call.argument<Int>("seconds") ?: 60
-                        val at = System.currentTimeMillis() + seconds * 1000L
-                        AlarmScheduler.schedule(this, listOf(AzanSlot("Test", at)))
+                        AlarmScheduler.scheduleTestAlarm(this, seconds)
                         result.success(null)
                     }
 
