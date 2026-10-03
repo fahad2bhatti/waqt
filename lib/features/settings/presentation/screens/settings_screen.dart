@@ -89,12 +89,6 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => context.push('/language'),
             ),
             const AppRow(label: 'Theme', value: 'Dark'),
-            AppRow(
-              label: 'Phase 0 Prototype',
-              value: 'Debug',
-              valueColor: AppColors.gold,
-              onTap: () => context.push('/phase0'),
-            ),
             AppRow(label: t('about'), onTap: () => context.push('/about')),
             AppRow(
               label: t('delete_data'),

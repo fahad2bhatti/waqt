@@ -10,7 +10,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <application
-        android:label="waqt"
+        android:label="Waqt"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

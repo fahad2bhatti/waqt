@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/router/app_router.dart';
@@ -16,22 +15,6 @@ class WaqtApp extends ConsumerStatefulWidget {
 }
 
 class _WaqtAppState extends ConsumerState<WaqtApp> {
-  static const _blockerChannel = MethodChannel('com.waqt/prayer_blocker');
-
-  @override
-  void initState() {
-    super.initState();
-    
-    // Listen for the "onAppBlocked" signal from Native Android
-    _blockerChannel.setMethodCallHandler((call) async {
-      if (call.method == 'onAppBlocked') {
-        // Use the router to push the overlay screen
-        appRouter.push('/overlay-preview');
-      }
-      return null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final language = ref.watch(languageProvider);
@@ -50,10 +33,7 @@ class _WaqtAppState extends ConsumerState<WaqtApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ur'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('ur')],
     );
   }
 }

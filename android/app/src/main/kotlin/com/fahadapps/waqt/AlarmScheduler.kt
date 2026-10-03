@@ -26,6 +26,7 @@ object AlarmScheduler {
     private const val KEY_SLOTS = "slots"
     private const val KEY_PENDING_PRAYED = "pending_prayed"
     private const val MAX_SLOTS = 64
+    private const val TEST_REQUEST_CODE = MAX_SLOTS
     private const val GOLD = 0xFFD9B26B // AppColors.gold
 
     const val CHANNEL_ID = "azan"
@@ -39,9 +40,19 @@ object AlarmScheduler {
         arm(context, slots)
     }
 
-    fun scheduleAlarm(context: Context, seconds: Int) {
-        val at = System.currentTimeMillis() + seconds * 1000L
-        schedule(context, listOf(AzanSlot("Test", at)))
+    fun scheduleTestAlarm(context: Context, seconds: Int) {
+        val slot = AzanSlot("Test", System.currentTimeMillis() + seconds * 1000L)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val showIntent = PendingIntent.getActivity(
+            context,
+            0,
+            Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+        alarmManager.setAlarmClock(
+            AlarmManager.AlarmClockInfo(slot.millis, showIntent),
+            pendingFor(context, TEST_REQUEST_CODE, slot),
+        )
     }
 
     fun rescheduleFromStorage(context: Context) {
@@ -76,6 +87,14 @@ object AlarmScheduler {
             alarmManager.cancel(pending)
             pending.cancel()
         }
+        val testPending = pendingFor(context, TEST_REQUEST_CODE, AzanSlot("", 0L))
+        alarmManager.cancel(testPending)
+        testPending.cancel()
+    }
+
+    fun clear(context: Context) {
+        cancelAll(context)
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().clear().apply()
     }
 
     private fun pendingFor(context: Context, requestCode: Int, slot: AzanSlot): PendingIntent {
@@ -147,7 +166,8 @@ object AlarmScheduler {
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        val prayed = actionIntent(context, id, ACTION_PRAYED, "$dayKey|$name")
+        val logName = if (name == "jummah") "Dhuhr" else name
+        val prayed = actionIntent(context, id, ACTION_PRAYED, "$dayKey|$logName")
         val dismiss = actionIntent(context, id + 1, ACTION_DISMISS, null, id)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)

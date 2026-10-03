@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -41,18 +42,16 @@ class _PrayerModeScreenState extends ConsumerState<PrayerModeScreen> {
     return AppPage(
       children: [
         Text(t('mode_title'), style: AppText.title),
-        Text(
-          t('mode_desc'),
-          style: AppText.body,
-        ),
+        Text(t('mode_desc'), style: AppText.body),
         const SizedBox(height: 16),
-        SwitchListTile(
-          title: Text('Enable Blocker', style: AppText.body),
-          subtitle: Text('Block apps in background', style: AppText.caption),
-          value: _isActive,
-          onChanged: (_) => _toggleService(),
-          activeThumbColor: AppColors.gold,
-        ),
+        if (kDebugMode)
+          SwitchListTile(
+            title: Text('Enable Blocker', style: AppText.body),
+            subtitle: Text('Block apps in background', style: AppText.caption),
+            value: _isActive,
+            onChanged: (_) => _toggleService(),
+            activeThumbColor: AppColors.gold,
+          ),
         const SizedBox(height: 24),
         Text(t('apps_to_pause'), style: AppText.label),
         AppRow(

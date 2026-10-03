@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,22 +12,6 @@ class AppShell extends ConsumerStatefulWidget {
 }
 
 class _AppShellState extends ConsumerState<AppShell> {
-  static const _blockerChannel = MethodChannel('com.waqt/prayer_blocker');
-
-  @override
-  void initState() {
-    super.initState();
-    
-    // Listen for the "onAppBlocked" signal from MainActivity.kt
-    _blockerChannel.setMethodCallHandler((call) async {
-      if (call.method == 'onAppBlocked') {
-        // User ko overlay screen par bhej do
-        context.push('/overlay-preview');
-      }
-      return null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

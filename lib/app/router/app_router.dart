@@ -13,10 +13,8 @@ import 'package:waqt/features/prayer_times/presentation/screens/times_screen.dar
 import 'package:waqt/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/about_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/adjustments_screen.dart';
-import 'package:waqt/features/settings/presentation/screens/azan_sound_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/language_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/settings_screen.dart';
-import 'package:waqt/features/settings/presentation/screens/phase0_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/alarm_settings_screen.dart';
 import 'package:waqt/features/stats/presentation/screens/stats_screen.dart';
 import 'package:waqt/features/tracking/presentation/screens/prayer_log_screen.dart';
@@ -39,11 +37,12 @@ final appRouter = GoRouter(
     ),
     GoRoute(path: '/city-search', builder: (_, _) => const CitySearchScreen()),
     GoRoute(path: '/adjustments', builder: (_, _) => const AdjustmentsScreen()),
-    GoRoute(path: '/azan-sound', builder: (_, _) => const AzanSoundScreen()),
-    GoRoute(path: '/alarm-settings', builder: (_, _) => const AlarmSettingsScreen()),
+    GoRoute(
+      path: '/alarm-settings',
+      builder: (_, _) => const AlarmSettingsScreen(),
+    ),
     GoRoute(path: '/language', builder: (_, _) => const LanguageScreen()),
     GoRoute(path: '/about', builder: (_, _) => const AboutScreen()),
-    GoRoute(path: '/phase0', builder: (_, _) => const Phase0Screen()),
     GoRoute(path: '/prayer-log', builder: (_, _) => const PrayerLogScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => AppShell(navigationShell: shell),
