@@ -52,7 +52,7 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
       DateTime.fromMillisecondsSinceEpoch(azan.millis),
     ).format(context);
     final status = silent
-        ? 'Phone is silent'
+        ? 'Your phone is silent'
         : paused
         ? 'Paused'
         : t('azan_playing');
@@ -104,7 +104,12 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
                 ),
                 child: Text(t('i_prayed')),
               ),
-              if (!silent)
+              if (silent)
+                OutlinedButton(
+                  onPressed: AzanBridge.stop,
+                  child: const Text('Dismiss'),
+                )
+              else
                 Row(
                   spacing: 12,
                   children: [
