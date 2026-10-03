@@ -9,7 +9,6 @@ import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/presentation/widgets/delete_data_dialog.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
-import 'package:waqt/features/settings/providers/azan_sound_provider.dart';
 import 'package:waqt/features/settings/providers/language_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -29,7 +28,6 @@ class SettingsScreen extends ConsumerWidget {
         .watch(adjustmentsProvider)
         .values
         .any((minutes) => minutes != 0);
-    final sound = ref.watch(azanSoundProvider).sound;
     final language = ref.watch(languageProvider);
 
     return AppPage(
@@ -68,8 +66,8 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             AppRow(
               label: t('azan_sound'),
-              value: sound,
-              onTap: () => context.push('/azan-sound'),
+              value: 'Configure',
+              onTap: () => context.push('/alarm-settings'),
             ),
             const AppRow(label: 'Prayer window', value: '20 min'),
             AppRow(
@@ -91,6 +89,12 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => context.push('/language'),
             ),
             const AppRow(label: 'Theme', value: 'Dark'),
+            AppRow(
+              label: 'Phase 0 Prototype',
+              value: 'Debug',
+              valueColor: AppColors.gold,
+              onTap: () => context.push('/phase0'),
+            ),
             AppRow(label: t('about'), onTap: () => context.push('/about')),
             AppRow(
               label: t('delete_data'),

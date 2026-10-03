@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -36,6 +37,11 @@ object AlarmScheduler {
         cancelAll(context)
         save(context, slots)
         arm(context, slots)
+    }
+
+    fun scheduleAlarm(context: Context, seconds: Int) {
+        val at = System.currentTimeMillis() + seconds * 1000L
+        schedule(context, listOf(AzanSlot("Test", at)))
     }
 
     fun rescheduleFromStorage(context: Context) {
@@ -151,6 +157,7 @@ object AlarmScheduler {
             .setContentText("Time for Azan")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setFullScreenIntent(open, true)
             .setAutoCancel(true)
             .setContentIntent(open)
             .addAction(0, "I prayed", prayed)
@@ -186,6 +193,8 @@ object AlarmScheduler {
         manager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, "Azan", NotificationManager.IMPORTANCE_HIGH).apply {
                 description = "Prayer time alerts"
+                setBypassDnd(true)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             },
         )
     }

@@ -110,6 +110,18 @@ class MainActivity : FlutterActivity() {
                 }
             }
 
+        MethodChannel(messenger, "com.waqt/phase0")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "scheduleAlarm" -> {
+                        val seconds = call.argument<Int>("seconds") ?: 30
+                        AlarmScheduler.scheduleAlarm(this, seconds)
+                        result.success(true)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+
         MethodChannel(messenger, "com.waqt/prayer_blocker")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
