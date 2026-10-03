@@ -27,9 +27,6 @@ import java.util.Locale
 class AzanService : Service() {
     private var player: MediaPlayer? = null
     private var focusRequest: AudioFocusRequest? = null
-    private var paused = false
-    private var name = "Azan"
-    private var millis = 0L
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -49,24 +46,26 @@ class AzanService : Service() {
                 if (mp == null) {
                     stopAzan()
                 } else {
-                    if (paused) mp.start() else mp.pause()
-                    paused = !paused
-                    notificationManager().notify(NOTIFICATION_ID, buildNotification(false))
+                    val pause = state != STATE_PAUSED
+                    if (pause) mp.pause() else mp.start()
+                    update(if (pause) STATE_PAUSED else STATE_PLAYING)
+                    notificationManager().notify(NOTIFICATION_ID, buildNotification())
                 }
                 return START_NOT_STICKY
             }
         }
 
-        name = intent?.getStringExtra(EXTRA_NAME) ?: "Azan"
-        millis = intent?.getLongExtra(EXTRA_MILLIS, System.currentTimeMillis())
+        currentName = intent?.getStringExtra(EXTRA_NAME) ?: "Azan"
+        currentMillis = intent?.getLongExtra(EXTRA_MILLIS, System.currentTimeMillis())
             ?: System.currentTimeMillis()
         val sound = intent?.getStringExtra(EXTRA_SOUND) ?: "Makkah"
         val differentFajr = intent?.getBooleanExtra(EXTRA_DIFFERENT_FAJR, false) ?: false
-        paused = false
 
         val silent = (getSystemService(Context.AUDIO_SERVICE) as AudioManager).ringerMode !=
             AudioManager.RINGER_MODE_NORMAL
-        val notification = buildNotification(silent)
+        update(if (silent) STATE_SILENT else STATE_PLAYING)
+
+        val notification = buildNotification()
         if (Build.VERSION.SDK_INT >= 29) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
         } else {
@@ -81,7 +80,7 @@ class AzanService : Service() {
             return START_NOT_STICKY
         }
 
-        play(rawFor(sound, name, differentFajr))
+        play(rawFor(sound, currentName, differentFajr))
         return START_NOT_STICKY
     }
 
@@ -142,12 +141,12 @@ class AzanService : Service() {
         }
     }
 
-    private fun buildNotification(silent: Boolean): Notification {
+    private fun buildNotification(): Notification {
         ensureChannel()
-        val time = SimpleDateFormat("h:mm a", Locale.ENGLISH).format(Date(millis))
-        val dayKey = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date(millis))
-        val logName = if (name == "jummah") "Dhuhr" else name
-        val title = "${name.uppercase(Locale.ENGLISH)}  $time"
+        val silent = state == STATE_SILENT
+        val paused = state == STATE_PAUSED
+        val time = SimpleDateFormat("h:mm a", Locale.ENGLISH).format(Date(currentMillis))
+        val title = "${currentName.uppercase(Locale.ENGLISH)}  $time"
         val text = when {
             silent -> "Phone is silent"
             paused -> "Paused"
@@ -159,11 +158,12 @@ class AzanService : Service() {
             1,
             Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("alarm_name", currentName)
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val toggle = actionIntent(2, ACTION_TOGGLE, null)
-        val prayed = actionIntent(3, ACTION_PRAYED, "$dayKey|$logName")
+        val prayed = actionIntent(3, ACTION_PRAYED, prayedKey())
         val stop = actionIntent(4, ACTION_STOP, null)
 
         val small = RemoteViews(packageName, R.layout.notification_azan_small)
@@ -185,7 +185,7 @@ class AzanService : Service() {
             big.setOnClickPendingIntent(R.id.azan_stop, stop)
         }
 
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_waqt)
             .setColor(0xFFD9B26B.toInt())
             .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -195,8 +195,11 @@ class AzanService : Service() {
             .setCustomBigContentView(big)
             .setOngoing(!silent)
             .setAutoCancel(silent)
+            .setOnlyAlertOnce(true)
+            .setFullScreenIntent(open, true)
             .setContentIntent(open)
-            .build()
+        if (silent) builder.setDeleteIntent(stop)
+        return builder.build()
     }
 
     private fun actionIntent(requestCode: Int, action: String, logKey: String?): PendingIntent {
@@ -244,6 +247,7 @@ class AzanService : Service() {
         releasePlayer()
         stopForeground(STOP_FOREGROUND_REMOVE)
         notificationManager().cancel(NOTIFICATION_ID)
+        update(STATE_STOPPED)
         stopSelf()
     }
 
@@ -257,11 +261,45 @@ class AzanService : Service() {
         const val EXTRA_MILLIS = "millis"
         const val EXTRA_SOUND = "sound"
         const val EXTRA_DIFFERENT_FAJR = "different_fajr"
-        private const val EXTRA_LOG_KEY = "logKey"
-        private const val ACTION_STOP = "com.fahadapps.waqt.AZAN_STOP"
-        private const val ACTION_PRAYED = "com.fahadapps.waqt.AZAN_PRAYED"
-        private const val ACTION_TOGGLE = "com.fahadapps.waqt.AZAN_TOGGLE"
+        const val EXTRA_LOG_KEY = "logKey"
+        const val ACTION_STOP = "com.fahadapps.waqt.AZAN_STOP"
+        const val ACTION_PRAYED = "com.fahadapps.waqt.AZAN_PRAYED"
+        const val ACTION_TOGGLE = "com.fahadapps.waqt.AZAN_TOGGLE"
+        const val STATE_STOPPED = "stopped"
+        const val STATE_STARTING = "starting"
+        const val STATE_PLAYING = "playing"
+        const val STATE_PAUSED = "paused"
+        const val STATE_SILENT = "silent"
         private const val CHANNEL_ID = "azan_playing_v2"
         private const val NOTIFICATION_ID = 4101
+
+        var state: String = STATE_STOPPED
+            private set
+        var currentName: String = ""
+        var currentMillis: Long = 0L
+        var stateListener: ((Map<String, Any>) -> Unit)? = null
+
+        fun isActive(): Boolean = state != STATE_STOPPED
+
+        fun snapshot(): Map<String, Any> =
+            mapOf("state" to state, "name" to currentName, "millis" to currentMillis)
+
+        fun update(newState: String) {
+            state = newState
+            stateListener?.invoke(snapshot())
+        }
+
+        fun prepare(name: String, millis: Long) {
+            currentName = name
+            currentMillis = millis
+            update(STATE_STARTING)
+        }
+
+        fun prayedKey(): String? {
+            if (currentMillis == 0L) return null
+            val day = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date(currentMillis))
+            val logName = if (currentName == "jummah") "Dhuhr" else currentName
+            return "$day|$logName"
+        }
     }
 }

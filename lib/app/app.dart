@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/router/app_router.dart';
 import 'package:waqt/app/theme/app_theme.dart';
+import 'package:waqt/features/azan/providers/azan_bridge.dart';
 import 'package:waqt/features/azan/providers/azan_sync_provider.dart';
 import 'package:waqt/features/azan/providers/prayed_sync_provider.dart';
 import 'package:waqt/features/settings/providers/language_provider.dart';
@@ -15,6 +16,12 @@ class WaqtApp extends ConsumerStatefulWidget {
 }
 
 class _WaqtAppState extends ConsumerState<WaqtApp> {
+  @override
+  void initState() {
+    super.initState();
+    AzanBridge.init(ref, onOpen: () => appRouter.push('/azan'));
+  }
+
   @override
   Widget build(BuildContext context) {
     final language = ref.watch(languageProvider);

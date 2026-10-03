@@ -10,14 +10,6 @@ class AzanReceiver : BroadcastReceiver() {
         val name = intent.getStringExtra("name")?.takeIf { it.isNotEmpty() } ?: return
         val millis = intent.getLongExtra("millis", System.currentTimeMillis())
 
-        // Force start MainActivity for full-screen experience
-        val launchIntent = Intent(context, MainActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            putExtra("alarm_name", name)
-        }
-        context.startActivity(launchIntent)
-
         // Remember when the last Azan alarm really fired (shown in Health check).
         val prefs = context.getSharedPreferences("waqt_azan", Context.MODE_PRIVATE)
         prefs.edit().putLong("last_fired", System.currentTimeMillis()).apply()
@@ -29,9 +21,19 @@ class AzanReceiver : BroadcastReceiver() {
             putExtra(AzanService.EXTRA_DIFFERENT_FAJR, prefs.getBoolean("different_fajr", false))
         }
         try {
+            AzanService.prepare(name, millis)
             ContextCompat.startForegroundService(context, serviceIntent)
         } catch (e: Exception) {
+            AzanService.update(AzanService.STATE_STOPPED)
             AlarmScheduler.showAzanNotification(context, name, millis)
         }
+
+        // Open the app on the Azan screen (the notification full-screen intent covers the locked case).
+        val launchIntent = Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            putExtra("alarm_name", name)
+        }
+        context.startActivity(launchIntent)
     }
 }
