@@ -27,7 +27,12 @@ class MainActivity : FlutterActivity() {
 
     override fun onStart() {
         super.onStart()
-        registerReceiver(blockerReceiver, IntentFilter(BlockerBroadcastReceiver.ACTION_BLOCK_APP))
+        ContextCompat.registerReceiver(
+            this,
+            blockerReceiver,
+            IntentFilter(BlockerBroadcastReceiver.ACTION_BLOCK_APP),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
     }
 
     override fun onStop() {
@@ -54,10 +59,9 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
 
-                    "scheduleTest" -> {
+                    "scheduleAlarm" -> {
                         val seconds = call.argument<Int>("seconds") ?: 60
-                        val at = System.currentTimeMillis() + seconds * 1000L
-                        AlarmScheduler.schedule(this, listOf(AzanSlot("Test", at)))
+                        AlarmScheduler.scheduleAlarm(this, seconds)
                         result.success(null)
                     }
 
@@ -73,6 +77,16 @@ class MainActivity : FlutterActivity() {
                                 1001,
                             )
                         }
+                        result.success(null)
+                    }
+
+                    "cancelAll" -> {
+                        AlarmScheduler.clear(this)
+                        result.success(null)
+                    }
+
+                    "stopBlocker" -> {
+                        stopService(Intent(this, PrayerBlockerService::class.java))
                         result.success(null)
                     }
 
@@ -106,18 +120,6 @@ class MainActivity : FlutterActivity() {
                         result.success(if (millis == 0L) null else millis)
                     }
 
-                    else -> result.notImplemented()
-                }
-            }
-
-        MethodChannel(messenger, "com.waqt/phase0")
-            .setMethodCallHandler { call, result ->
-                when (call.method) {
-                    "scheduleAlarm" -> {
-                        val seconds = call.argument<Int>("seconds") ?: 30
-                        AlarmScheduler.scheduleAlarm(this, seconds)
-                        result.success(true)
-                    }
                     else -> result.notImplemented()
                 }
             }

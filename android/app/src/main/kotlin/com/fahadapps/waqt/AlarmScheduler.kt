@@ -78,6 +78,11 @@ object AlarmScheduler {
         }
     }
 
+    fun clear(context: Context) {
+        cancelAll(context)
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().clear().apply()
+    }
+
     private fun pendingFor(context: Context, requestCode: Int, slot: AzanSlot): PendingIntent {
         val intent = Intent(context, AzanReceiver::class.java).apply {
             action = ACTION_AZAN

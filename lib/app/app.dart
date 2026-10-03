@@ -21,7 +21,7 @@ class _WaqtAppState extends ConsumerState<WaqtApp> {
   @override
   void initState() {
     super.initState();
-    
+
     // Listen for the "onAppBlocked" signal from Native Android
     _blockerChannel.setMethodCallHandler((call) async {
       if (call.method == 'onAppBlocked') {
@@ -50,10 +50,7 @@ class _WaqtAppState extends ConsumerState<WaqtApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ur'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('ur')],
     );
   }
 }

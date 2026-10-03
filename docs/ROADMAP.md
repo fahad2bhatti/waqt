@@ -71,8 +71,8 @@ Build in this order, one feature at a time, commit after each:
 
 The riskiest parts are native Android, not UI. Before investing weeks in more UI, prove on a **real Android phone**:
 
-- [ ] `setAlarmClock` fires with the app killed and the screen off
-- [ ] UsageStats detects a chosen app and an overlay appears over it
+- [x] `setAlarmClock` fires with the app killed and the screen off
+- [x] UsageStats detects a chosen app and an overlay appears over it
 
 If either fails, the design or scope may need to change. Better to know early.
 

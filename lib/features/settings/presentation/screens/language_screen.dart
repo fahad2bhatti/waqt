@@ -67,7 +67,9 @@ class _LanguageOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.gold.withValues(alpha: 0.1) : AppColors.card,
+          color: isSelected
+              ? AppColors.gold.withValues(alpha: 0.1)
+              : AppColors.card,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? AppColors.gold : AppColors.line,

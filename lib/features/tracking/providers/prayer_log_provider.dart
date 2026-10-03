@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/core/storage/prefs.dart';
 
-String logKey(DateTime day, String prayer) =>
-    '${day.toIso8601String().substring(0, 10)}|$prayer';
+String logKey(DateTime day, String prayer) {
+  final key = prayer == 'jummah' ? 'Dhuhr' : prayer;
+  return '${day.toIso8601String().substring(0, 10)}|$key';
+}
 
 class PrayerLogNotifier extends Notifier<Set<String>> {
   @override

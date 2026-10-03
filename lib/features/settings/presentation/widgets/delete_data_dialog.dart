@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
@@ -22,6 +23,20 @@ Future<bool> confirmDeleteAllData(BuildContext context) async {
 /// Wipes everything stored on the device and resets in-memory state.
 Future<void> deleteAllData(WidgetRef ref) async {
   await ref.read(prefsProvider).clear();
+
+  const azanChannel = MethodChannel('com.fahadapps.waqt/azan');
+  try {
+    await azanChannel.invokeMethod('cancelAll');
+  } catch (e) {
+    debugPrint('Error cancelling alarms during data deletion: $e');
+  }
+
+  try {
+    await azanChannel.invokeMethod('stopBlocker');
+  } catch (e) {
+    debugPrint('Error stopping blocker during data deletion: $e');
+  }
+
   ref
     ..invalidate(cityProvider)
     ..invalidate(adjustmentsProvider)

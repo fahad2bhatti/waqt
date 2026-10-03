@@ -28,18 +28,16 @@ PrayerTimes calculatePrayerTimes({
 }
 
 List<PrayerSlot> prayerSlots(PrayerTimes times) {
+  final date = times.date;
+  final isFriday = date.weekday == DateTime.friday;
+
   final slots = [
     (name: 'Fajr', time: times.fajr.toLocal()),
-    (name: 'Dhuhr', time: times.dhuhr.toLocal()),
+    (name: isFriday ? 'jummah' : 'Dhuhr', time: times.dhuhr.toLocal()),
     (name: 'Asr', time: times.asr.toLocal()),
     (name: 'Maghrib', time: times.maghrib.toLocal()),
     (name: 'Isha', time: times.isha.toLocal()),
   ];
-
-  // TEMPORARY: Forced to true for testing so Jummah shows every day
-  if (true) {
-    slots.add((name: 'jummah', time: times.dhuhr.toLocal()));
-  }
 
   return slots;
 }

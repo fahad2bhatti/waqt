@@ -18,7 +18,7 @@ class _AppShellState extends ConsumerState<AppShell> {
   @override
   void initState() {
     super.initState();
-    
+
     // Listen for the "onAppBlocked" signal from MainActivity.kt
     _blockerChannel.setMethodCallHandler((call) async {
       if (call.method == 'onAppBlocked') {
