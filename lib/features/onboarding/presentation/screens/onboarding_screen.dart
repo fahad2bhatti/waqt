@@ -105,65 +105,43 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   String _translateStepTitle(int step, String Function(String) t) {
     switch (step) {
-      case 0:
-        return t('make_time');
-      case 1:
-        return t('onboard_2_title');
-      case 2:
-        return t('onboard_3_title');
-      case 3:
-        return t('onboard_4_title');
-      case 4:
-        return t('onboard_5_title');
-      default:
-        return '';
+      case 0: return t('make_time');
+      case 1: return t('onboard_2_title');
+      case 2: return t('onboard_3_title');
+      case 3: return t('onboard_4_title');
+      case 4: return t('onboard_5_title');
+      default: return '';
     }
   }
 
   String _translateStepBody(int step, String Function(String) t) {
     switch (step) {
-      case 0:
-        return t('onboard_1_body');
-      case 1:
-        return t('onboard_2_body');
-      case 2:
-        return t('onboard_3_body');
-      case 3:
-        return t('onboard_4_body');
-      case 4:
-        return t('onboard_5_body');
-      default:
-        return '';
+      case 0: return t('onboard_1_body');
+      case 1: return t('onboard_2_body');
+      case 2: return t('onboard_3_body');
+      case 3: return t('onboard_4_body');
+      case 4: return t('onboard_5_body');
+      default: return '';
     }
   }
 
   String _translateStepPrimary(int step, String Function(String) t) {
     switch (step) {
-      case 0:
-        return t('get_started');
-      case 1:
-        return t('onboard_2_primary');
-      case 2:
-        return t('onboard_3_primary');
-      case 3:
-        return t('onboard_4_primary');
-      case 4:
-        return t('onboard_5_primary');
-      default:
-        return '';
+      case 0: return t('get_started');
+      case 1: return t('onboard_2_primary');
+      case 2: return t('onboard_3_primary');
+      case 3: return t('onboard_4_primary');
+      case 4: return t('onboard_5_primary');
+      default: return '';
     }
   }
 
   String _translateStepSecondary(int step, String Function(String) t) {
     switch (step) {
-      case 1:
-        return t('onboard_2_secondary');
-      case 3:
-        return t('onboard_4_secondary');
-      case 4:
-        return t('onboard_5_secondary');
-      default:
-        return '';
+      case 1: return t('onboard_2_secondary');
+      case 3: return t('onboard_4_secondary');
+      case 4: return t('onboard_5_secondary');
+      default: return '';
     }
   }
 }

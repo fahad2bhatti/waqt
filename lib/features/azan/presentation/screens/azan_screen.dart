@@ -49,7 +49,10 @@ class AzanScreen extends ConsumerWidget {
               foregroundColor: AppColors.background,
               padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
             ),
-            child: Text(t('i_prayed'), style: AppText.body),
+            child: Text(
+              t('i_prayed'),
+              style: AppText.body,
+            ),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -61,7 +64,10 @@ class AzanScreen extends ConsumerWidget {
               foregroundColor: AppColors.gold,
               padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
             ),
-            child: Text(t('stop_azan'), style: AppText.body),
+            child: Text(
+              t('stop_azan'),
+              style: AppText.body,
+            ),
           ),
           const SizedBox(height: 40),
         ],

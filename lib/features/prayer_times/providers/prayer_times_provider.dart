@@ -67,6 +67,7 @@ final dayTimesProvider = Provider<List<(String, String)>>((ref) {
   final t = ref.watch(translationProvider);
 
   return [
-    for (final slot in slots) (t(slot.name), formatTime(slot.time.toLocal())),
+    for (final slot in slots)
+      (t(slot.name), formatTime(slot.time.toLocal())),
   ];
 });
