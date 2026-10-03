@@ -14,6 +14,11 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.view.View
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,6 +27,9 @@ import java.util.Locale
 class AzanService : Service() {
     private var player: MediaPlayer? = null
     private var focusRequest: AudioFocusRequest? = null
+    private var paused = false
+    private var name = "Azan"
+    private var millis = 0L
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -36,19 +44,41 @@ class AzanService : Service() {
                 stopAzan()
                 return START_NOT_STICKY
             }
+            ACTION_TOGGLE -> {
+                val mp = player
+                if (mp == null) {
+                    stopAzan()
+                } else {
+                    if (paused) mp.start() else mp.pause()
+                    paused = !paused
+                    notificationManager().notify(NOTIFICATION_ID, buildNotification(false))
+                }
+                return START_NOT_STICKY
+            }
         }
 
-        val name = intent?.getStringExtra(EXTRA_NAME) ?: "Azan"
-        val millis = intent?.getLongExtra(EXTRA_MILLIS, System.currentTimeMillis())
+        name = intent?.getStringExtra(EXTRA_NAME) ?: "Azan"
+        millis = intent?.getLongExtra(EXTRA_MILLIS, System.currentTimeMillis())
             ?: System.currentTimeMillis()
         val sound = intent?.getStringExtra(EXTRA_SOUND) ?: "Makkah"
         val differentFajr = intent?.getBooleanExtra(EXTRA_DIFFERENT_FAJR, false) ?: false
+        paused = false
 
-        val notification = buildNotification(name, millis)
+        val silent = (getSystemService(Context.AUDIO_SERVICE) as AudioManager).ringerMode !=
+            AudioManager.RINGER_MODE_NORMAL
+        val notification = buildNotification(silent)
         if (Build.VERSION.SDK_INT >= 29) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
         } else {
             startForeground(NOTIFICATION_ID, notification)
+        }
+
+        if (silent) {
+            vibrate()
+            stopForeground(STOP_FOREGROUND_DETACH)
+            notificationManager().notify(NOTIFICATION_ID, notification)
+            stopSelf()
+            return START_NOT_STICKY
         }
 
         play(rawFor(sound, name, differentFajr))
@@ -65,7 +95,7 @@ class AzanService : Service() {
     private fun play(rawRes: Int) {
         releasePlayer()
         val attrs = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ALARM)
+            .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build()
 
@@ -92,11 +122,37 @@ class AzanService : Service() {
         mp.start()
     }
 
-    private fun buildNotification(name: String, millis: Long): Notification {
+    @Suppress("DEPRECATION")
+    private fun vibrate() {
+        val vibrator = if (Build.VERSION.SDK_INT >= 31) {
+            (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
+        } else {
+            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+        if (!vibrator.hasVibrator()) return
+        val pattern = longArrayOf(0, 600, 300, 600, 300, 600)
+        if (Build.VERSION.SDK_INT >= 26) {
+            val attrs = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1), attrs)
+        } else {
+            vibrator.vibrate(pattern, -1)
+        }
+    }
+
+    private fun buildNotification(silent: Boolean): Notification {
         ensureChannel()
         val time = SimpleDateFormat("h:mm a", Locale.ENGLISH).format(Date(millis))
         val dayKey = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date(millis))
         val logName = if (name == "jummah") "Dhuhr" else name
+        val title = "${name.uppercase(Locale.ENGLISH)}  $time"
+        val text = when {
+            silent -> "Phone is silent"
+            paused -> "Paused"
+            else -> "Azan is playing"
+        }
 
         val open = PendingIntent.getActivity(
             this,
@@ -106,19 +162,40 @@ class AzanService : Service() {
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        val stop = actionIntent(2, ACTION_STOP, null)
+        val toggle = actionIntent(2, ACTION_TOGGLE, null)
         val prayed = actionIntent(3, ACTION_PRAYED, "$dayKey|$logName")
+        val stop = actionIntent(4, ACTION_STOP, null)
+
+        val small = RemoteViews(packageName, R.layout.notification_azan_small)
+        val big = RemoteViews(packageName, R.layout.notification_azan_big)
+        for (views in listOf(small, big)) {
+            views.setTextViewText(R.id.azan_title, title)
+            views.setTextViewText(R.id.azan_text, text)
+            views.setOnClickPendingIntent(R.id.azan_prayed, prayed)
+        }
+        if (silent) {
+            small.setViewVisibility(R.id.azan_pause, View.GONE)
+            big.setViewVisibility(R.id.azan_row, View.GONE)
+        } else {
+            val label = if (paused) "Resume" else "Pause"
+            small.setTextViewText(R.id.azan_pause, label)
+            small.setOnClickPendingIntent(R.id.azan_pause, toggle)
+            big.setTextViewText(R.id.azan_pause, label)
+            big.setOnClickPendingIntent(R.id.azan_pause, toggle)
+            big.setOnClickPendingIntent(R.id.azan_stop, stop)
+        }
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_waqt)
             .setColor(0xFFD9B26B.toInt())
-            .setContentTitle("${name.uppercase(Locale.ENGLISH)}  $time")
-            .setContentText("Azan is playing")
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(small)
+            .setCustomBigContentView(big)
+            .setOngoing(!silent)
+            .setAutoCancel(silent)
             .setContentIntent(open)
-            .addAction(0, "Stop", stop)
-            .addAction(0, "I prayed", prayed)
             .build()
     }
 
@@ -135,13 +212,16 @@ class AzanService : Service() {
         )
     }
 
+    private fun notificationManager() =
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
     private fun ensureChannel() {
         if (Build.VERSION.SDK_INT < 26) return
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager = notificationManager()
         if (manager.getNotificationChannel(CHANNEL_ID) != null) return
         manager.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Azan playing", NotificationManager.IMPORTANCE_LOW).apply {
-                description = "Shown while the Azan is playing"
+            NotificationChannel(CHANNEL_ID, "Azan", NotificationManager.IMPORTANCE_HIGH).apply {
+                description = "Shown while the Azan is playing or when the phone is silent"
                 setSound(null, null)
                 enableVibration(false)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -163,6 +243,7 @@ class AzanService : Service() {
     private fun stopAzan() {
         releasePlayer()
         stopForeground(STOP_FOREGROUND_REMOVE)
+        notificationManager().cancel(NOTIFICATION_ID)
         stopSelf()
     }
 
@@ -179,7 +260,8 @@ class AzanService : Service() {
         private const val EXTRA_LOG_KEY = "logKey"
         private const val ACTION_STOP = "com.fahadapps.waqt.AZAN_STOP"
         private const val ACTION_PRAYED = "com.fahadapps.waqt.AZAN_PRAYED"
-        private const val CHANNEL_ID = "azan_playing"
+        private const val ACTION_TOGGLE = "com.fahadapps.waqt.AZAN_TOGGLE"
+        private const val CHANNEL_ID = "azan_playing_v2"
         private const val NOTIFICATION_ID = 4101
     }
 }
