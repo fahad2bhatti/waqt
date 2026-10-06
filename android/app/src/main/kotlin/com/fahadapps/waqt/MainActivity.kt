@@ -19,6 +19,8 @@ class MainActivity : FlutterActivity() {
     private lateinit var blockerChannel: MethodChannel
     private var azanChannel: MethodChannel? = null
     private var launchedForAzan = false
+    private var visible = false
+    private var closeAfterAzan = false
 
     private val blockerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -41,6 +43,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onStart() {
         super.onStart()
+        visible = true
         ContextCompat.registerReceiver(
             this,
             blockerReceiver,
@@ -51,6 +54,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onStop() {
         super.onStop()
+        visible = false
         unregisterReceiver(blockerReceiver)
     }
 
@@ -67,6 +71,7 @@ class MainActivity : FlutterActivity() {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
         }
+        if (azan && !visible) closeAfterAzan = true
         return azan
     }
 
@@ -151,6 +156,14 @@ class MainActivity : FlutterActivity() {
                     val open = launchedForAzan && AzanService.isActive()
                     launchedForAzan = false
                     result.success(open)
+                }
+
+                "azanScreenClosed" -> {
+                    if (closeAfterAzan) {
+                        closeAfterAzan = false
+                        moveTaskToBack(true)
+                    }
+                    result.success(null)
                 }
 
                 "azanToggle" -> {

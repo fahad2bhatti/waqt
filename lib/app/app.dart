@@ -20,7 +20,14 @@ class _WaqtAppState extends ConsumerState<WaqtApp> {
   @override
   void initState() {
     super.initState();
-    AzanBridge.init(ref, onOpen: () => appRouter.push('/azan'));
+    AzanBridge.init(
+      ref,
+      ready: () {
+        final path = appRouter.routerDelegate.currentConfiguration.uri.path;
+        return path.isNotEmpty && path != '/splash';
+      },
+      onOpen: () => appRouter.push('/azan'),
+    );
   }
 
   @override

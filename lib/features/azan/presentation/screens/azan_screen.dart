@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +7,7 @@ import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/azan/providers/azan_bridge.dart';
 import 'package:waqt/features/azan/providers/azan_playback_provider.dart';
+import 'package:waqt/features/tracking/providers/prayer_log_provider.dart';
 
 class AzanScreen extends ConsumerStatefulWidget {
   const AzanScreen({super.key});
@@ -33,8 +36,9 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
     if (context.canPop()) {
       context.pop();
     } else {
-      context.go('/');
+      context.go('/home');
     }
+    unawaited(AzanBridge.screenClosed());
   }
 
   @override
@@ -94,7 +98,17 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
                 ),
               ),
               FilledButton(
-                onPressed: AzanBridge.prayed,
+                onPressed: () {
+                  if (azan.name != 'Test') {
+                    ref.read(prayerLogProvider.notifier).markPrayed([
+                      logKey(
+                        DateTime.fromMillisecondsSinceEpoch(azan.millis),
+                        azan.name,
+                      ),
+                    ]);
+                  }
+                  AzanBridge.prayed();
+                },
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(60),
                   textStyle: const TextStyle(
