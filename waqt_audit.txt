@@ -1,0 +1,161 @@
+=== git log ===
+939da01 feat: implement native prayer mode blocker, RTL support, and dynamic Jummah slots
+49e9ee2 feat: Azan scheduler and notification, prayer log, delete data, real health check
+ad51666 feat: persist settings, onboarding flag and prayer log; real stats
+8c6de6f feat: real prayer times with adhan_dart, city, adjustments and live countdown
+e3405ed feat: app picker, adjustments, Azan sound, language, city search, about and overlay preview
+23eece6 feat: splash, onboarding, health check and qibla screens
+eea2b51 feat: app shell with bottom nav, Times, Prayer Mode, Stats and Settings screens
+f7f31d8 chore: ignore web test folder
+b37103c docs: add roadmap
+8f88195 feat(home): add app shell, router and Home screen with sample data
+ce0a0c2 chore: add Inter font files
+cc4c4c4 chore: add Inter font files
+c6a5c0c chore: clean pubspec, add assets and Inter font
+2f347ff chore: project folder structure
+3803104 chore: project folder structure
+98dd675 chore: ignore secrets and signing files
+1dbc325 chore: initial Flutter project (Waqt)
+=== git status ===
+## main...origin/main
+ M android/app/src/main/kotlin/com/fahadapps/waqt/MainActivity.kt
+ M lib/app/router/app_router.dart
+ M lib/features/settings/presentation/screens/settings_screen.dart
+?? lib/features/settings/presentation/screens/alarm_settings_screen.dart
+?? lib/features/settings/presentation/screens/phase0_screen.dart
+=== dart files ===
+lib/app/app.dart
+lib/app/router/app_router.dart
+lib/app/shell/app_shell.dart
+lib/app/theme/app_colors.dart
+lib/app/theme/app_text.dart
+lib/app/theme/app_theme.dart
+lib/core/native/azan_scheduler.dart
+lib/core/native/device_health.dart
+lib/core/storage/prefs.dart
+lib/core/utils/time_format.dart
+lib/core/utils/translations.dart
+lib/core/widgets/app_page.dart
+lib/core/widgets/app_row.dart
+lib/core/widgets/app_search_field.dart
+lib/core/widgets/brand_icon.dart
+lib/core/widgets/info_card.dart
+lib/features/azan/presentation/screens/azan_screen.dart
+lib/features/azan/providers/azan_sync_provider.dart
+lib/features/azan/providers/prayed_sync_provider.dart
+lib/features/health_check/presentation/screens/health_check_screen.dart
+lib/features/health_check/providers/health_check_provider.dart
+lib/features/home/presentation/screens/home_screen.dart
+lib/features/home/presentation/widgets/next_prayer_card.dart
+lib/features/home/presentation/widgets/prayer_mode_status_card.dart
+lib/features/home/presentation/widgets/prayer_row.dart
+lib/features/home/providers/home_provider.dart
+lib/features/onboarding/data/onboarding_steps.dart
+lib/features/onboarding/presentation/screens/onboarding_screen.dart
+lib/features/onboarding/presentation/screens/splash_screen.dart
+lib/features/prayer_mode/data/available_apps.dart
+lib/features/prayer_mode/presentation/screens/app_picker_screen.dart
+lib/features/prayer_mode/presentation/screens/overlay_preview_screen.dart
+lib/features/prayer_mode/presentation/screens/prayer_mode_screen.dart
+lib/features/prayer_mode/providers/blocked_apps_provider.dart
+lib/features/prayer_times/data/cities.dart
+lib/features/prayer_times/data/prayer_calculator.dart
+lib/features/prayer_times/data/prayer_entry.dart
+lib/features/prayer_times/presentation/screens/city_search_screen.dart
+lib/features/prayer_times/presentation/screens/times_screen.dart
+lib/features/prayer_times/presentation/widgets/week_strip.dart
+lib/features/prayer_times/providers/city_provider.dart
+lib/features/prayer_times/providers/prayer_times_provider.dart
+lib/features/qibla/presentation/screens/qibla_screen.dart
+lib/features/settings/presentation/screens/about_screen.dart
+lib/features/settings/presentation/screens/adjustments_screen.dart
+lib/features/settings/presentation/screens/alarm_settings_screen.dart
+lib/features/settings/presentation/screens/azan_sound_screen.dart
+lib/features/settings/presentation/screens/language_screen.dart
+lib/features/settings/presentation/screens/phase0_screen.dart
+lib/features/settings/presentation/screens/settings_screen.dart
+lib/features/settings/presentation/widgets/delete_data_dialog.dart
+lib/features/settings/providers/adjustments_provider.dart
+lib/features/settings/providers/azan_sound_provider.dart
+lib/features/settings/providers/language_provider.dart
+lib/features/stats/presentation/screens/stats_screen.dart
+lib/features/stats/presentation/widgets/week_card.dart
+lib/features/stats/providers/stats_provider.dart
+lib/features/tracking/presentation/screens/prayer_log_screen.dart
+lib/features/tracking/presentation/widgets/month_calendar.dart
+lib/features/tracking/providers/prayer_log_provider.dart
+lib/features/tracking/providers/streak_provider.dart
+lib/firebase_options.dart
+lib/main.dart
+=== kotlin/manifest files ===
+android/app/src/main/AndroidManifest.xml
+android/app/src/main/kotlin/com/fahadapps/waqt/AlarmScheduler.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/AzanActionReceiver.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/AzanReceiver.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/BlockerBroadcastReceiver.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/BootReceiver.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/DeviceHealth.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/MainActivity.kt
+android/app/src/main/kotlin/com/fahadapps/waqt/PrayerBlockerService.kt
+=== lines of Dart ===
+3655
+=== lines of Kotlin ===
+536
+=== pubspec.yaml ===
+name: waqt
+description: "Waqt - prayer times, Azan and Prayer Mode."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^3.4.3
+  go_router: ^18.0.2
+  adhan_dart: ^2.0.1
+  intl: ^0.20.2
+  firebase_core: ^4.15.0
+  firebase_crashlytics: ^5.4.0
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/audio/
+    - assets/images/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700=== manifest ===
+3:    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+4:    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+5:    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+6:    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+7:    <uses-permission
+34:        <receiver
+38:        <receiver
+42:        <receiver
+53:        <service 
+=== todo/placeholder ===
+=== analyze ===
+=== test ===
+=== secrets check ===

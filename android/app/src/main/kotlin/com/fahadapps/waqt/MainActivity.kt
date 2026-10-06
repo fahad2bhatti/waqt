@@ -137,6 +137,14 @@ class MainActivity : FlutterActivity() {
                     result.success(null)
                 }
 
+                "setSound" -> {
+                    getSharedPreferences("waqt_azan", Context.MODE_PRIVATE).edit()
+                        .putString("sound", call.argument<String>("sound") ?: "Makkah")
+                        .putBoolean("different_fajr", call.argument<Boolean>("differentFajr") ?: false)
+                        .apply()
+                    result.success(null)
+                }
+
                 "azanState" -> result.success(AzanService.snapshot())
 
                 "consumeAzanLaunch" -> {
