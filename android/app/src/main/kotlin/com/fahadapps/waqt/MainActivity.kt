@@ -164,9 +164,14 @@ class MainActivity : FlutterActivity() {
                 }
 
                 "azanScreenClosed" -> {
-                    if (closeAfterAzan) {
+                    val locked = (getSystemService(Context.KEYGUARD_SERVICE) as android.app.KeyguardManager).isKeyguardLocked
+                    if (closeAfterAzan || locked) {
                         closeAfterAzan = false
                         moveTaskToBack(true)
+                    }
+                    if (Build.VERSION.SDK_INT >= 27) {
+                        setShowWhenLocked(false)
+                        setTurnScreenOn(false)
                     }
                     result.success(null)
                 }

@@ -42,7 +42,15 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => PopScope(
+    canPop: false,
+    onPopInvokedWithResult: (didPop, _) {
+      if (!didPop) _close();
+    },
+    child: _body(context),
+  );
+
+  Widget _body(BuildContext context) {
     final t = ref.watch(translationProvider);
     final azan = ref.watch(azanPlaybackProvider);
 
