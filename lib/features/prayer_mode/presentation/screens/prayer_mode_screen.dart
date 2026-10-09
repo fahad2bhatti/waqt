@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:waqt/core/config/features.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/widgets/app_page.dart';
@@ -38,6 +39,16 @@ class _PrayerModeScreenState extends ConsumerState<PrayerModeScreen> {
   Widget build(BuildContext context) {
     final t = ref.watch(translationProvider);
     final count = ref.watch(blockedAppsProvider).length;
+
+    if (!kPrayerModeEnabled) {
+      return AppPage(
+        children: [
+          Text(t('mode_title'), style: AppText.title),
+          Text(t('coming_soon').toUpperCase(), style: AppText.label),
+          Text(t('mode_coming_soon_body'), style: AppText.body),
+        ],
+      );
+    }
 
     return AppPage(
       children: [

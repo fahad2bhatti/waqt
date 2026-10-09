@@ -8,7 +8,6 @@ import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.util.Log
 
 /** Silent-phone heartbeat: 0.7 s on, 1.3 s off for about as long as an Azan. */
 object AzanVibration {
@@ -49,7 +48,6 @@ object AzanVibration {
         } else {
             v.vibrate(pattern, -1)
         }
-        Log.d("WaqtAzan", "vibration start")
     }
 
     private fun cancelNow(context: Context) {
@@ -64,7 +62,6 @@ object AzanVibration {
 
     fun stop(context: Context) {
         val app = context.applicationContext
-        Log.d("WaqtAzan", "vibration stop")
         cancelNow(app)
         // Second cancel shortly after, in case the first one raced with the vibration starting.
         handler.postDelayed({ cancelNow(app) }, 300)

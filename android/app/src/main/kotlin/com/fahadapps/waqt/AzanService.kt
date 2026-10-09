@@ -14,9 +14,6 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat

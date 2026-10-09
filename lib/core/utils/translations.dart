@@ -47,6 +47,13 @@ class TranslationService {
       'ur': 'پانچوں نمازیں ریکارڈ ہو گئیں',
     },
     // Prayer Mode
+    'coming_soon': {'en': 'Coming soon', 'ur': 'جلد آ رہا ہے'},
+    'mode_coming_soon_body': {
+      'en':
+          'Prayer Mode will pause the apps you choose during prayer. It is coming in a future update.',
+      'ur':
+          'نماز موڈ نماز کے وقت آپ کی منتخب کردہ ایپس کو روک دے گا۔ یہ آنے والی اپڈیٹ میں شامل ہوگا۔',
+    },
     'mode_title': {'en': 'Prayer Mode', 'ur': 'نماز موڈ'},
     'mode_desc': {
       'en': 'Pause distracting apps during prayer time.',

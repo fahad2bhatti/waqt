@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waqt/core/config/features.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 
 class OnboardingStep {
@@ -49,12 +50,13 @@ const onboardingSteps = [
     primary: 'Enable Azan alerts',
     secondary: 'Maybe later',
   ),
-  OnboardingStep(
-    title: 'Protect your prayer time',
-    body:
-        'Prayer Mode covers apps you choose during prayer. Nothing is stored or sent anywhere.',
-    primary: 'Enable Prayer Mode',
-    secondary: 'Maybe later',
-    rows: [('Usage access', 'Off'), ('Display over other apps', 'Off')],
-  ),
+  if (kPrayerModeEnabled)
+    OnboardingStep(
+      title: 'Protect your prayer time',
+      body:
+          'Prayer Mode covers apps you choose during prayer. Nothing is stored or sent anywhere.',
+      primary: 'Enable Prayer Mode',
+      secondary: 'Maybe later',
+      rows: [('Usage access', 'Off'), ('Display over other apps', 'Off')],
+    ),
 ];

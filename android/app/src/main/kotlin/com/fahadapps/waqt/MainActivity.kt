@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
@@ -68,7 +67,6 @@ class MainActivity : FlutterActivity() {
     // Launched for an active Azan: show over the lock screen and wake the display.
     private fun markAzanLaunch(intent: Intent?): Boolean {
         val azan = intent?.hasExtra("alarm_name") == true && AzanService.isActive()
-        Log.d("WaqtAzan", "markAzanLaunch hasExtra=${intent?.hasExtra("alarm_name")} active=${AzanService.isActive()} state=${AzanService.state} visible=$visible")
         if (azan && Build.VERSION.SDK_INT >= 27) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
@@ -158,7 +156,6 @@ class MainActivity : FlutterActivity() {
 
                 "consumeAzanLaunch" -> {
                     val open = launchedForAzan && AzanService.isActive()
-                    Log.d("WaqtAzan", "consumeAzanLaunch launched=$launchedForAzan active=${AzanService.isActive()}")
                     launchedForAzan = false
                     result.success(open)
                 }

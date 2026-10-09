@@ -42,7 +42,6 @@ class PrayerBlockerService : Service() {
                 val sortedStats = stats.sortedByDescending { it.lastTimeUsed }
                 val topApp = sortedStats[0].packageName
 
-                Log.d("PrayerBlocker", "Foreground App: $topApp")
 
                 // Yahan hum check karenge ke app blocked hai ya nahi.
                 // Abhi simulation ke liye hum seedha broadcast bhej rahe hain.

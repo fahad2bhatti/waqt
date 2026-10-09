@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:waqt/core/config/features.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/utils/time_format.dart';
@@ -58,7 +59,7 @@ class HomeScreen extends ConsumerWidget {
               ),
           ],
         ),
-        PrayerModeStatusCard(appCount: appCount),
+        if (kPrayerModeEnabled) PrayerModeStatusCard(appCount: appCount),
       ],
     );
   }

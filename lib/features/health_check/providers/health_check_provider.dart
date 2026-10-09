@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:waqt/core/config/features.dart';
 import 'package:waqt/core/native/device_health.dart';
 import 'package:waqt/core/utils/time_format.dart';
 
@@ -46,7 +47,7 @@ final healthChecksProvider = Provider<List<HealthCheck>>((ref) {
     check(WaqtPermission.notifications, 'Notifications'),
     check(WaqtPermission.exactAlarms, 'Exact alarms'),
     check(WaqtPermission.battery, 'Battery: no restrictions'),
-    check(WaqtPermission.usageAccess, 'Usage access'),
+    if (kPrayerModeEnabled) check(WaqtPermission.usageAccess, 'Usage access'),
     check(WaqtPermission.overlay, 'Display over other apps'),
   ];
 });
