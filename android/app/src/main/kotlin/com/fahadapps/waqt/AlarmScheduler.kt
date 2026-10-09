@@ -171,7 +171,7 @@ object AlarmScheduler {
         val dismiss = actionIntent(context, id + 1, ACTION_DISMISS, null, id)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_waqt)
             .setColor(GOLD.toInt())
             .setContentTitle("${name.uppercase(Locale.ENGLISH)}  $time")
             .setContentText("Time for Azan")

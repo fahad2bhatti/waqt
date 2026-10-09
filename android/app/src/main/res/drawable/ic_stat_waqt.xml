@@ -3,7 +3,33 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- W -->
+    <path
+        android:pathData="M3.33,11.375 L7.96,19.59 L12,15.25 L16.04,19.59 L20.67,11.375"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- clock arch -->
+    <path
+        android:pathData="M4.58,8.67 A7.9,7.9 0 0,1 19.42,8.67"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="butt" />
+    <!-- hour hand -->
+    <path
+        android:pathData="M12,11.58 L12,6.5"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round" />
+    <!-- minute hand -->
+    <path
+        android:pathData="M12,11.58 L16.92,8.83"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round" />
+    <!-- hub -->
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M12,3a9,9 0 1,0 9,9c0,-0.46 -0.04,-0.92 -0.1,-1.36a5.389,5.389 0 0,1 -4.4,2.26 5.403,5.403 0 0,1 -3.14,-9.8c-0.44,-0.06 -0.9,-0.1 -1.36,-0.1z" />
+        android:pathData="M10.5,11.58 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0 Z" />
 </vector>
