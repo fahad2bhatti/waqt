@@ -87,6 +87,8 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
+        io.flutter.plugin.common.EventChannel(messenger, "com.fahadapps.waqt/compass")
+            .setStreamHandler(CompassStream(this))
 
         // Proper initialization with binaryMessenger
         blockerChannel = MethodChannel(messenger, "com.waqt/prayer_blocker")

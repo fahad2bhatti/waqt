@@ -125,6 +125,19 @@ class TranslationService {
       'ur': 'نماز موڈ فعال کریں',
     },
     'onboard_5_secondary': {'en': 'Maybe later', 'ur': 'شاید بعد میں'},
+    'qibla_turn': {
+      'en': 'Turn until the marker points up',
+      'ur': 'نشان اوپر کی طرف آنے تک گھومیں',
+    },
+    'qibla_found': {'en': 'Qibla found', 'ur': 'قبلہ مل گیا'},
+    'compass_calibrate': {
+      'en': 'Move your phone in a figure 8 to calibrate',
+      'ur': 'کیلیبریٹ کرنے کے لیے فون کو 8 کی شکل میں گھمائیں',
+    },
+    'compass_unavailable': {
+      'en': 'No compass sensor on this phone',
+      'ur': 'اس فون میں کمپاس سینسر نہیں ہے',
+    },
     'jummah': {'en': 'Jummah', 'ur': 'جمعہ'},
   };
 
