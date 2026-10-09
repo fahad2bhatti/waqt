@@ -19,6 +19,7 @@ object DeviceHealth {
         "battery" to ignoringBatteryOptimizations(context),
         "usageAccess" to usageAccessGranted(context),
         "overlay" to Settings.canDrawOverlays(context),
+        "fullScreenIntent" to fullScreenIntentAllowed(context),
     )
 
     fun settingsIntent(context: Context, key: String): Intent {
@@ -38,8 +39,22 @@ object DeviceHealth {
             "battery" -> Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
             "usageAccess" -> Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             "overlay" -> Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri)
+            "fullScreenIntent" ->
+                if (Build.VERSION.SDK_INT >= 34) {
+                    Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, uri)
+                } else {
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri)
+                }
             else -> Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri)
         }
+    }
+
+    // Android 14+ can turn this off; older versions always allow it.
+    private fun fullScreenIntentAllowed(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < 34) return true
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE)
+            as android.app.NotificationManager
+        return manager.canUseFullScreenIntent()
     }
 
     private fun exactAlarmsAllowed(context: Context): Boolean {

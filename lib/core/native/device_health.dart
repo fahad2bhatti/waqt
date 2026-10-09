@@ -7,6 +7,7 @@ enum WaqtPermission {
   battery,
   usageAccess,
   overlay,
+  fullScreenIntent,
 }
 
 class DeviceHealth {
