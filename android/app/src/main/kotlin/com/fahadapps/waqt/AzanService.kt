@@ -33,10 +33,12 @@ class AzanService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_STOP -> {
+                AzanVibration.stop(this)
                 stopAzan()
                 return START_NOT_STICKY
             }
             ACTION_PRAYED -> {
+                AzanVibration.stop(this)
                 intent.getStringExtra(EXTRA_LOG_KEY)?.let { AlarmScheduler.addPendingPrayed(this, it) }
                 stopAzan()
                 return START_NOT_STICKY
@@ -121,24 +123,8 @@ class AzanService : Service() {
         mp.start()
     }
 
-    @Suppress("DEPRECATION")
     private fun vibrate() {
-        val vibrator = if (Build.VERSION.SDK_INT >= 31) {
-            (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
-        } else {
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-        if (!vibrator.hasVibrator()) return
-        val pattern = longArrayOf(0, 600, 300, 600, 300, 600)
-        if (Build.VERSION.SDK_INT >= 26) {
-            val attrs = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1), attrs)
-        } else {
-            vibrator.vibrate(pattern, -1)
-        }
+        AzanVibration.start(this)
     }
 
     private fun buildNotification(): Notification {
@@ -244,6 +230,7 @@ class AzanService : Service() {
     }
 
     private fun stopAzan() {
+        AzanVibration.stop(this)
         releasePlayer()
         stopForeground(STOP_FOREGROUND_REMOVE)
         notificationManager().cancel(NOTIFICATION_ID)

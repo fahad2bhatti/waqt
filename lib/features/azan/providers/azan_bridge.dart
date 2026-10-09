@@ -27,6 +27,10 @@ class AzanBridge {
       for (var i = 0; i < 50 && !ready(); i++) {
         await Future<void>.delayed(const Duration(milliseconds: 100));
       }
+      debugPrint(
+        'WaqtAzan open: active=${ref.read(azanPlaybackProvider).active} '
+        'ready=${ready()} screenOpen=$azanScreenOpen',
+      );
       if (!azanScreenOpen && ref.read(azanPlaybackProvider).active) onOpen();
     }
 

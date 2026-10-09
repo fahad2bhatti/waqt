@@ -3,6 +3,7 @@ package com.fahadapps.waqt
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.content.ContextCompat
 
 class AzanReceiver : BroadcastReceiver() {
@@ -34,6 +35,9 @@ class AzanReceiver : BroadcastReceiver() {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra("alarm_name", name)
         }
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val fsi = if (android.os.Build.VERSION.SDK_INT >= 34) nm.canUseFullScreenIntent() else true
+        Log.d("WaqtAzan", "receiver name=$name overlay=${android.provider.Settings.canDrawOverlays(context)} fullScreenIntent=$fsi")
         context.startActivity(launchIntent)
     }
 }
