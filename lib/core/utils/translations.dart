@@ -145,6 +145,8 @@ class TranslationService {
       'en': 'No compass sensor on this phone',
       'ur': 'اس فون میں کمپاس سینسر نہیں ہے',
     },
+    'remind_me_in': {'en': 'Remind me in', 'ur': 'مجھے یاد دلائیں'},
+    'min_short': {'en': 'min', 'ur': 'منٹ'},
     'jummah': {'en': 'Jummah', 'ur': 'جمعہ'},
   };
 

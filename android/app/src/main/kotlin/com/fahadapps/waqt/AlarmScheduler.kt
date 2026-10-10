@@ -25,7 +25,7 @@ object AlarmScheduler {
     private const val PREFS = "waqt_azan"
     private const val KEY_SLOTS = "slots"
     private const val KEY_PENDING_PRAYED = "pending_prayed"
-    private const val MAX_SLOTS = 64
+    private const val MAX_SLOTS = 200
     private const val TEST_REQUEST_CODE = MAX_SLOTS
     private const val GOLD = 0xFFD9B26B // AppColors.gold
 
@@ -94,6 +94,7 @@ object AlarmScheduler {
 
     fun clear(context: Context) {
         cancelAll(context)
+        ReminderScheduler.cancelAll(context)
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().clear().apply()
     }
 

@@ -34,9 +34,18 @@ class AzanService : Service() {
                 stopAzan()
                 return START_NOT_STICKY
             }
+            ACTION_REMIND -> {
+                val minutes = intent.getIntExtra(EXTRA_MINUTES, 10)
+                ReminderScheduler.remindIn(this, currentName, currentMillis, prayedKey(), minutes)
+                stopAzan(scheduleReminder = false)
+                return START_NOT_STICKY
+            }
             ACTION_PRAYED -> {
                 AzanVibration.stop(this)
-                intent.getStringExtra(EXTRA_LOG_KEY)?.let { AlarmScheduler.addPendingPrayed(this, it) }
+                intent.getStringExtra(EXTRA_LOG_KEY)?.let {
+                    AlarmScheduler.addPendingPrayed(this, it)
+                    ReminderScheduler.markPrayed(this, it)
+                }
                 stopAzan()
                 return START_NOT_STICKY
             }
@@ -226,11 +235,15 @@ class AzanService : Service() {
         }
     }
 
-    private fun stopAzan() {
+    private fun stopAzan(scheduleReminder: Boolean = true) {
         AzanVibration.stop(this)
         releasePlayer()
         stopForeground(STOP_FOREGROUND_REMOVE)
         notificationManager().cancel(NOTIFICATION_ID)
+        // Azan ended without "I prayed": keep reminding until it is marked.
+        if (scheduleReminder && state != STATE_STOPPED) {
+            ReminderScheduler.afterAzan(this, currentName, currentMillis, prayedKey())
+        }
         update(STATE_STOPPED)
         stopSelf()
     }
@@ -249,6 +262,8 @@ class AzanService : Service() {
         const val ACTION_STOP = "com.fahadapps.waqt.AZAN_STOP"
         const val ACTION_PRAYED = "com.fahadapps.waqt.AZAN_PRAYED"
         const val ACTION_TOGGLE = "com.fahadapps.waqt.AZAN_TOGGLE"
+        const val ACTION_REMIND = "com.fahadapps.waqt.AZAN_REMIND"
+        const val EXTRA_MINUTES = "minutes"
         const val STATE_STOPPED = "stopped"
         const val STATE_STARTING = "starting"
         const val STATE_PLAYING = "playing"

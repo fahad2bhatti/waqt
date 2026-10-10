@@ -8,7 +8,7 @@ import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/prayer_times/providers/prayer_times_provider.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
 
-const _daysAhead = 7;
+const _daysAhead = 30;
 bool _askedNotificationPermission = false;
 
 /// Keeps native alarms in sync with the calculated prayer times.

@@ -6,6 +6,7 @@ import 'package:waqt/app/theme/app_theme.dart';
 import 'package:waqt/features/azan/providers/azan_bridge.dart';
 import 'package:waqt/features/azan/providers/azan_sound_sync_provider.dart';
 import 'package:waqt/features/azan/providers/azan_sync_provider.dart';
+import 'package:waqt/features/azan/providers/prayed_native_sync_provider.dart';
 import 'package:waqt/features/azan/providers/prayed_sync_provider.dart';
 import 'package:waqt/features/settings/providers/language_provider.dart';
 
@@ -35,6 +36,7 @@ class _WaqtAppState extends ConsumerState<WaqtApp> {
     final language = ref.watch(languageProvider);
     ref.watch(azanSyncProvider);
     ref.watch(prayedSyncProvider);
+    ref.watch(prayedNativeSyncProvider);
     ref.watch(azanSoundSyncProvider);
 
     return MaterialApp.router(

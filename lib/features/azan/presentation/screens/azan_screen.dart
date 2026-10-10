@@ -152,11 +152,57 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
                     ),
                   ],
                 ),
+              if (!notice)
+                _RemindRow(
+                  title: t('remind_me_in'),
+                  unit: t('min_short'),
+                  onSelect: AzanBridge.remind,
+                ),
               const Spacer(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _RemindRow extends StatelessWidget {
+  const _RemindRow({
+    required this.title,
+    required this.unit,
+    required this.onSelect,
+  });
+
+  final String title;
+  final String unit;
+  final Future<void> Function(int minutes) onSelect;
+
+  // For a quick test, temporarily change the first value to 1.
+  static const _options = [10, 20, 30];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 10,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+        ),
+        Row(
+          spacing: 10,
+          children: [
+            for (final minutes in _options)
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => onSelect(minutes),
+                  child: Text('$minutes $unit'),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

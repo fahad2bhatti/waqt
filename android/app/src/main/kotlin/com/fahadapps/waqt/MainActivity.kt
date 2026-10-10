@@ -183,6 +183,21 @@ class MainActivity : FlutterActivity() {
                     result.success(null)
                 }
 
+                "azanRemind" -> {
+                    startService(
+                        Intent(this, AzanService::class.java).apply {
+                            action = AzanService.ACTION_REMIND
+                            putExtra(AzanService.EXTRA_MINUTES, call.argument<Int>("minutes") ?: 10)
+                        },
+                    )
+                    result.success(null)
+                }
+
+                "syncPrayed" -> {
+                    ReminderScheduler.syncPrayed(this, call.argument<List<String>>("keys") ?: emptyList())
+                    result.success(null)
+                }
+
                 "azanPrayed" -> {
                     sendToAzanService(AzanService.ACTION_PRAYED, AzanService.prayedKey())
                     result.success(null)

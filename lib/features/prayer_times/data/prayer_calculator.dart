@@ -1,4 +1,5 @@
 import 'package:adhan_dart/adhan_dart.dart';
+import 'package:waqt/features/prayer_times/data/calculation_options.dart';
 import 'package:waqt/features/prayer_times/data/cities.dart';
 
 typedef PrayerSlot = ({String name, DateTime time});
@@ -15,8 +16,10 @@ PrayerTimes calculatePrayerTimes({
   required City city,
   required Map<String, int> adjustments,
   required DateTime date,
+  CalcMethod method = CalcMethod.karachi,
+  Madhab madhab = Madhab.hanafi,
 }) {
-  final params = CalculationMethodParameters.karachi()..madhab = Madhab.hanafi;
+  final params = method.parameters()..madhab = madhab;
   for (final MapEntry(:key, :value) in _adjustedPrayers.entries) {
     params.adjustments[value] = adjustments[key] ?? 0;
   }

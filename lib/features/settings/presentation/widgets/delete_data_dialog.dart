@@ -7,6 +7,7 @@ import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/features/prayer_mode/providers/blocked_apps_provider.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
+import 'package:waqt/features/settings/providers/calculation_provider.dart';
 import 'package:waqt/features/settings/providers/azan_sound_provider.dart';
 import 'package:waqt/features/settings/providers/language_provider.dart';
 import 'package:waqt/features/tracking/providers/prayer_log_provider.dart';
@@ -40,6 +41,8 @@ Future<void> deleteAllData(WidgetRef ref) async {
   ref
     ..invalidate(cityProvider)
     ..invalidate(adjustmentsProvider)
+    ..invalidate(calcMethodProvider)
+    ..invalidate(asrProvider)
     ..invalidate(azanSoundProvider)
     ..invalidate(languageProvider)
     ..invalidate(blockedAppsProvider)

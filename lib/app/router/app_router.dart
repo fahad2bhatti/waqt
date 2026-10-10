@@ -13,6 +13,7 @@ import 'package:waqt/features/prayer_times/presentation/screens/times_screen.dar
 import 'package:waqt/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/about_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/adjustments_screen.dart';
+import 'package:waqt/features/settings/presentation/screens/calculation_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/language_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/settings_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/alarm_settings_screen.dart';
@@ -41,6 +42,7 @@ final appRouter = GoRouter(
       path: '/alarm-settings',
       builder: (_, _) => const AlarmSettingsScreen(),
     ),
+    GoRoute(path: '/calculation', builder: (_, _) => const CalculationScreen()),
     GoRoute(path: '/language', builder: (_, _) => const LanguageScreen()),
     GoRoute(path: '/about', builder: (_, _) => const AboutScreen()),
     GoRoute(path: '/prayer-log', builder: (_, _) => const PrayerLogScreen()),

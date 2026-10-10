@@ -145,6 +145,11 @@ class AzanScheduler {
     }
   }
 
+  /// Tells native which prayers are already marked as prayed, so it stops
+  /// reminding for them (for example after a tick on Home).
+  Future<void> syncPrayed(List<String> keys) =>
+      _call('syncPrayed', {'keys': keys});
+
   Future<void> requestNotificationPermission() async {
     if (isIos) {
       try {

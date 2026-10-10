@@ -111,6 +111,15 @@ class AzanBridge {
     await _channel.invokeMethod('azanPrayed');
   }
 
+  /// "Remind me in N min": native schedules the reminder and stops the Azan.
+  static Future<void> remind(int minutes) async {
+    if (AzanScheduler.isIos) {
+      _notifier?.apply(const {'state': 'stopped'});
+      return;
+    }
+    await _channel.invokeMethod('azanRemind', {'minutes': minutes});
+  }
+
   static Future<void> screenClosed() async {
     if (AzanScheduler.isIos) return;
     await _channel.invokeMethod('azanScreenClosed');

@@ -8,7 +8,10 @@ import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/presentation/widgets/delete_data_dialog.dart';
+import 'package:waqt/core/config/features.dart';
+import 'package:waqt/features/prayer_times/data/calculation_options.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
+import 'package:waqt/features/settings/providers/calculation_provider.dart';
 import 'package:waqt/features/settings/providers/language_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -29,6 +32,8 @@ class SettingsScreen extends ConsumerWidget {
         .values
         .any((minutes) => minutes != 0);
     final language = ref.watch(languageProvider);
+    final method = ref.watch(calcMethodProvider);
+    final asr = ref.watch(asrProvider);
 
     return AppPage(
       children: [
@@ -43,15 +48,17 @@ class SettingsScreen extends ConsumerWidget {
               valueColor: AppColors.gold,
               onTap: () => context.push('/city-search'),
             ),
-            const AppRow(
+            AppRow(
               label: 'Calculation method',
-              value: 'Karachi',
+              value: method.label,
               valueColor: AppColors.gold,
+              onTap: () => context.push('/calculation'),
             ),
-            const AppRow(
+            AppRow(
               label: 'Asr',
-              value: 'Hanafi',
+              value: asrLabel(asr),
               valueColor: AppColors.gold,
+              onTap: () => context.push('/calculation'),
             ),
             AppRow(
               label: 'Adjustments',
@@ -69,7 +76,8 @@ class SettingsScreen extends ConsumerWidget {
               value: 'Configure',
               onTap: () => context.push('/alarm-settings'),
             ),
-            const AppRow(label: 'Prayer window', value: '20 min'),
+            if (kPrayerModeEnabled)
+              const AppRow(label: 'Prayer window', value: '20 min'),
             AppRow(
               label: 'Azan protection',
               value: 'Check',
@@ -88,7 +96,6 @@ class SettingsScreen extends ConsumerWidget {
               value: language,
               onTap: () => context.push('/language'),
             ),
-            const AppRow(label: 'Theme', value: 'Dark'),
             AppRow(label: t('about'), onTap: () => context.push('/about')),
             AppRow(
               label: t('delete_data'),

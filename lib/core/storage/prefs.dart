@@ -10,6 +10,8 @@ abstract final class PrefKeys {
   static const language = 'language';
   static const blockedApps = 'blocked_apps';
   static const prayerLog = 'prayer_log';
+  static const calcMethod = 'calc_method';
+  static const asr = 'asr';
 }
 
 final prefsProvider = Provider<SharedPreferences>(

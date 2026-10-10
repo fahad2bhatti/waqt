@@ -7,6 +7,7 @@ import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_times/data/prayer_calculator.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
+import 'package:waqt/features/settings/providers/calculation_provider.dart';
 
 final nowProvider = StreamProvider<DateTime>((ref) {
   final controller = StreamController<DateTime>();
@@ -36,6 +37,8 @@ final prayerTimesProvider = Provider.family<PrayerTimes, DateTime>((ref, date) {
     city: ref.watch(cityProvider),
     adjustments: ref.watch(adjustmentsProvider),
     date: date,
+    method: ref.watch(calcMethodProvider),
+    madhab: ref.watch(asrProvider),
   );
 });
 
