@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/native/azan_scheduler.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/info_card.dart';
@@ -49,9 +49,7 @@ class HealthCheckScreen extends ConsumerWidget {
           FilledButton(
             onPressed: () async {
               try {
-                await const MethodChannel(
-                  'com.fahadapps.waqt/azan',
-                ).invokeMethod('scheduleTest', {'seconds': 10});
+                await ref.read(azanSchedulerProvider).scheduleTest(seconds: 10);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

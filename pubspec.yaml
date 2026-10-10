@@ -20,7 +20,8 @@ dependencies:
   firebase_core: ^4.15.0
   firebase_crashlytics: ^5.4.0
   shared_preferences: ^2.5.5
-
+  flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -44,7 +45,9 @@ flutter:
           weight: 700
 flutter_launcher_icons:
   android: true
-  ios: false
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#0E1512"
   image_path: "assets/icon/icon.png"
   adaptive_icon_background: "#0E1512"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"

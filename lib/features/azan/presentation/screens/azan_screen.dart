@@ -60,10 +60,13 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
 
     final paused = azan.state == 'paused';
     final silent = azan.state == 'silent';
+    final notice = azan.state == 'notice';
     final time = TimeOfDay.fromDateTime(
       DateTime.fromMillisecondsSinceEpoch(azan.millis),
     ).format(context);
-    final status = silent
+    final status = notice
+        ? 'Time to pray'
+        : silent
         ? 'Your phone is silent'
         : paused
         ? 'Paused'
@@ -126,7 +129,7 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
                 ),
                 child: Text(t('i_prayed')),
               ),
-              if (silent)
+              if (silent || notice)
                 OutlinedButton(
                   onPressed: AzanBridge.stop,
                   child: const Text('Dismiss'),
