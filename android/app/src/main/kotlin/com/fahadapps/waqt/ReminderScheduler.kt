@@ -15,8 +15,9 @@ import androidx.core.content.ContextCompat
 import org.json.JSONArray
 
 /**
- * Keeps reminding the user to pray after the Azan ends, until the prayer is
- * marked as prayed, the next prayer starts, or an hour has passed.
+ * Reminds the user to pray after the Azan ends. The reminder notification stays
+ * until "I prayed" or "Remind again" is tapped, the next prayer starts, or an
+ * hour has passed.
  */
 object ReminderScheduler {
     private const val PREFS = "waqt_azan"
@@ -33,7 +34,7 @@ object ReminderScheduler {
 
     const val ACTION_REMINDER = "com.fahadapps.waqt.REMINDER"
     const val ACTION_PRAYED = "com.fahadapps.waqt.REMINDER_PRAYED"
-    const val ACTION_DISMISS = "com.fahadapps.waqt.REMINDER_DISMISS"
+    const val ACTION_AGAIN = "com.fahadapps.waqt.REMINDER_AGAIN"
 
     private val names = arrayOf("Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Test")
 
@@ -69,7 +70,22 @@ object ReminderScheduler {
         schedule(context, name, azanMillis, logKey, minutes)
     }
 
-    /** Called by [ReminderReceiver] when a reminder alarm fires. */
+    /** "Remind again" on the reminder notification: hide it and remind later. */
+    fun remindAgain(
+        context: Context,
+        name: String,
+        azanMillis: Long,
+        logKey: String,
+        minutes: Int,
+    ) {
+        NotificationManagerCompat.from(context).cancel(NOTIFICATION_BASE + slotIndex(name))
+        schedule(context, name, azanMillis, logKey, minutes)
+    }
+
+    /**
+     * Called by [ReminderReceiver] when a reminder alarm fires. The notification
+     * stays on screen; the next reminder is only scheduled by "Remind again".
+     */
     fun onFired(
         context: Context,
         name: String,
@@ -77,12 +93,19 @@ object ReminderScheduler {
         logKey: String,
         minutes: Int,
     ) {
-        if (!canRemind(context, azanMillis, logKey, System.currentTimeMillis())) {
+        val now = System.currentTimeMillis()
+        if (!canRemind(context, azanMillis, logKey, now)) {
             cancel(context, name)
             return
         }
-        showNotification(context, name, logKey)
-        schedule(context, name, azanMillis, logKey, minutes)
+        showNotification(
+            context,
+            name,
+            azanMillis,
+            logKey,
+            minutes,
+            windowEnd(context, azanMillis) - now,
+        )
     }
 
     private fun schedule(
@@ -122,6 +145,13 @@ object ReminderScheduler {
         if (atMillis > azanMillis + WINDOW_MS) return false
         val next = nextSlotMillis(context, azanMillis)
         return next == null || atMillis < next
+    }
+
+    /** The reminder is pointless after this: next prayer starts or an hour passes. */
+    private fun windowEnd(context: Context, azanMillis: Long): Long {
+        val end = azanMillis + WINDOW_MS
+        val next = nextSlotMillis(context, azanMillis)
+        return if (next != null) minOf(end, next) else end
     }
 
     private fun nextSlotMillis(context: Context, after: Long): Long? {
@@ -206,7 +236,14 @@ object ReminderScheduler {
 
     // ---- notification ----
 
-    private fun showNotification(context: Context, name: String, logKey: String) {
+    private fun showNotification(
+        context: Context,
+        name: String,
+        azanMillis: Long,
+        logKey: String,
+        minutes: Int,
+        timeoutMs: Long,
+    ) {
         if (Build.VERSION.SDK_INT >= 33 &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED
@@ -224,20 +261,25 @@ object ReminderScheduler {
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        val prayed = actionIntent(context, id, ACTION_PRAYED, logKey, id)
-        val dismiss = actionIntent(context, id + 100, ACTION_DISMISS, null, id)
+        val prayed = actionIntent(context, id, ACTION_PRAYED, name, azanMillis, logKey, minutes, id)
+        val again = actionIntent(context, id + 100, ACTION_AGAIN, name, azanMillis, logKey, minutes, id)
+        // If the notification is cleared some other way, the reminder must not be lost.
+        val cleared = actionIntent(context, id + 200, ACTION_AGAIN, name, azanMillis, logKey, minutes, id)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_waqt)
             .setColor(GOLD.toInt())
             .setContentTitle("Time to pray $display")
-            .setContentText("Have you prayed? Tap \"I prayed\" when you are done.")
+            .setContentText("Tap \"I prayed\" when you are done, or remind again in $minutes min.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .setAutoCancel(true)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setTimeoutAfter(timeoutMs.coerceAtLeast(60_000L))
             .setContentIntent(open)
+            .setDeleteIntent(cleared)
             .addAction(0, "I prayed", prayed)
-            .addAction(0, "Dismiss", dismiss)
+            .addAction(0, "Remind again", again)
             .build()
         NotificationManagerCompat.from(context).notify(id, notification)
     }
@@ -246,13 +288,19 @@ object ReminderScheduler {
         context: Context,
         requestCode: Int,
         action: String,
-        logKey: String?,
+        name: String,
+        azanMillis: Long,
+        logKey: String,
+        minutes: Int,
         notificationId: Int,
     ): PendingIntent {
         val intent = Intent(context, ReminderActionReceiver::class.java).apply {
             this.action = action
             putExtra("nid", notificationId)
-            if (logKey != null) putExtra("logKey", logKey)
+            putExtra("name", name)
+            putExtra("millis", azanMillis)
+            putExtra("logKey", logKey)
+            putExtra("minutes", minutes)
         }
         return PendingIntent.getBroadcast(
             context,

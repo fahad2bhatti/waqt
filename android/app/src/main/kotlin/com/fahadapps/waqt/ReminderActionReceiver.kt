@@ -5,14 +5,28 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
 
-/** "I prayed" and "Dismiss" buttons on the reminder notification. */
+/** "I prayed" and "Remind again" on the reminder notification. */
 class ReminderActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         NotificationManagerCompat.from(context).cancel(intent.getIntExtra("nid", 0))
-        if (intent.action == ReminderScheduler.ACTION_PRAYED) {
-            val key = intent.getStringExtra("logKey") ?: return
-            AlarmScheduler.addPendingPrayed(context, key)
-            ReminderScheduler.markPrayed(context, key)
+        val logKey = intent.getStringExtra("logKey") ?: return
+
+        when (intent.action) {
+            ReminderScheduler.ACTION_PRAYED -> {
+                AlarmScheduler.addPendingPrayed(context, logKey)
+                ReminderScheduler.markPrayed(context, logKey)
+            }
+
+            ReminderScheduler.ACTION_AGAIN -> {
+                val name = intent.getStringExtra("name") ?: return
+                ReminderScheduler.remindAgain(
+                    context,
+                    name,
+                    intent.getLongExtra("millis", 0L),
+                    logKey,
+                    intent.getIntExtra("minutes", 10),
+                )
+            }
         }
     }
 }
