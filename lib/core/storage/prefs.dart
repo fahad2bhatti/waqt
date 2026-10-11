@@ -12,6 +12,7 @@ abstract final class PrefKeys {
   static const prayerLog = 'prayer_log';
   static const calcMethod = 'calc_method';
   static const asr = 'asr';
+  static const termsAccepted = 'terms_accepted';
 }
 
 final prefsProvider = Provider<SharedPreferences>(

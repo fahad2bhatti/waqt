@@ -98,6 +98,22 @@ class SettingsScreen extends ConsumerWidget {
             ),
             AppRow(label: t('about'), onTap: () => context.push('/about')),
             AppRow(
+              label: 'Terms & Conditions',
+              onTap: () => context.push('/terms'),
+            ),
+            AppRow(
+              label: 'Privacy Policy',
+              onTap: () => context.push('/privacy'),
+            ),
+            AppRow(
+              label: 'Licenses',
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: 'Waqt',
+                applicationVersion: '1.0.0',
+              ),
+            ),
+            AppRow(
               label: t('delete_data'),
               labelColor: AppColors.danger,
               onTap: () => _deleteAll(context, ref),

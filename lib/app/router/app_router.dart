@@ -1,8 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:waqt/app/shell/app_shell.dart';
+import 'package:waqt/core/legal/legal_text.dart';
 import 'package:waqt/features/azan/presentation/screens/azan_screen.dart';
 import 'package:waqt/features/health_check/presentation/screens/health_check_screen.dart';
 import 'package:waqt/features/home/presentation/screens/home_screen.dart';
+import 'package:waqt/features/legal/presentation/screens/agreement_screen.dart';
+import 'package:waqt/features/legal/presentation/screens/legal_doc_screen.dart';
 import 'package:waqt/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:waqt/features/onboarding/presentation/screens/splash_screen.dart';
 import 'package:waqt/features/prayer_mode/presentation/screens/app_picker_screen.dart';
@@ -24,6 +27,17 @@ final appRouter = GoRouter(
   initialLocation: '/splash',
   routes: [
     GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
+    GoRoute(path: '/agreement', builder: (_, _) => const AgreementScreen()),
+    GoRoute(
+      path: '/terms',
+      builder: (_, _) =>
+          const LegalDocScreen(title: 'Terms & Conditions', text: termsText),
+    ),
+    GoRoute(
+      path: '/privacy',
+      builder: (_, _) =>
+          const LegalDocScreen(title: 'Privacy Policy', text: privacyText),
+    ),
     GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
     GoRoute(path: '/azan', builder: (_, _) => const AzanScreen()),
     GoRoute(

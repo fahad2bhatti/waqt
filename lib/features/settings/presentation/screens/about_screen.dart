@@ -36,30 +36,14 @@ class AboutScreen extends StatelessWidget {
           const InfoCard(
             title: 'Your data stays on this device',
             body:
-                'Location, blocked apps and prayer history are never uploaded.',
+                'Location, blocked apps and prayer history are never uploaded. '
+                'Only crash reports are sent, to help us fix bugs.',
             titleSize: 18,
           ),
           Column(
             spacing: 8,
             children: [
               const AppRow(label: 'Version', value: _appVersion),
-              if (kPrivacyPolicyUrl.isNotEmpty)
-                AppRow(
-                  label: 'Privacy policy',
-                  value: 'Open',
-                  valueColor: AppColors.gold,
-                  onTap: () => _open(context, Uri.parse(kPrivacyPolicyUrl)),
-                ),
-              AppRow(
-                label: 'Licenses',
-                value: 'Open',
-                valueColor: AppColors.gold,
-                onTap: () => showLicensePage(
-                  context: context,
-                  applicationName: 'Waqt',
-                  applicationVersion: _appVersion,
-                ),
-              ),
               if (kFeedbackEmail.isNotEmpty)
                 AppRow(
                   label: 'Send feedback',

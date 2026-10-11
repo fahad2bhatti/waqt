@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/legal/legal_text.dart';
 import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/core/widgets/brand_icon.dart';
 import 'package:waqt/core/utils/translations.dart';
@@ -22,9 +23,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     super.initState();
     _timer = Timer(const Duration(milliseconds: 1500), () {
-      final onboarded =
-          ref.read(prefsProvider).getBool(PrefKeys.onboarded) ?? false;
-      context.go(onboarded ? '/home' : '/onboarding');
+      final prefs = ref.read(prefsProvider);
+      final accepted = prefs.getString(PrefKeys.termsAccepted) == kTermsVersion;
+      final onboarded = prefs.getBool(PrefKeys.onboarded) ?? false;
+      if (!accepted) {
+        context.go('/agreement');
+      } else {
+        context.go(onboarded ? '/home' : '/onboarding');
+      }
     });
   }
 
