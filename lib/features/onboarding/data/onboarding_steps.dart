@@ -11,6 +11,7 @@ class OnboardingStep {
     this.secondaryRoute,
     this.rows = const [],
     this.rowColor = AppColors.textMuted,
+    this.requestsAlerts = false,
   });
 
   final String title;
@@ -20,6 +21,9 @@ class OnboardingStep {
   final String? secondaryRoute;
   final List<(String, String)> rows;
   final Color rowColor;
+
+  /// True for the step that asks for the Azan permissions.
+  final bool requestsAlerts;
 }
 
 const onboardingSteps = [
@@ -46,9 +50,10 @@ const onboardingSteps = [
   OnboardingStep(
     title: 'Never miss the Azan',
     body:
-        'Waqt needs permission for notifications and exact alarms so the Azan plays on time.',
+        'Waqt needs a few permissions so the Azan plays on time, even when your phone is locked.',
     primary: 'Enable Azan alerts',
     secondary: 'Maybe later',
+    requestsAlerts: true,
   ),
   if (kPrayerModeEnabled)
     OnboardingStep(

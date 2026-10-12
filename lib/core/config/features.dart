@@ -2,5 +2,5 @@
 const kPrayerModeEnabled = false;
 
 /// Fill these in before release. Rows in About stay hidden while empty.
-const kPrivacyPolicyUrl = '';
-const kFeedbackEmail = '';
+const kPrivacyPolicyUrl = 'https://fahad2bhatti.github.io/waqt/privacy/';
+const kFeedbackEmail = 'fahadsaeed2622@gmail.com';

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/features/prayer_times/data/calculation_options.dart';
 import 'package:waqt/features/settings/providers/calculation_provider.dart';
@@ -12,6 +13,7 @@ class CalculationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
     final method = ref.watch(calcMethodProvider);
     final asr = ref.watch(asrProvider);
 
@@ -19,40 +21,36 @@ class CalculationScreen extends ConsumerWidget {
       appBar: AppBar(),
       body: AppPage(
         children: [
-          const Text('Calculation', style: AppText.title),
-          const Text(
-            'Pakistan defaults are Karachi and Hanafi. Times and Azan '
-            'alarms update as soon as you change these.',
-            style: AppText.body,
-          ),
-          const Text('METHOD', style: AppText.label),
+          Text(t('calc_title'), style: AppText.title),
+          Text(t('calc_desc'), style: AppText.body),
+          Text(t('calc_section_method'), style: AppText.label),
           Column(
             spacing: 8,
             children: [
               for (final option in CalcMethod.values)
                 _Option(
-                  label: option.label,
-                  note: option.note,
+                  label: t('method_${option.name}'),
+                  note: t('method_${option.name}_note'),
                   selected: option == method,
                   onTap: () =>
                       ref.read(calcMethodProvider.notifier).select(option),
                 ),
             ],
           ),
-          const Text('ASR', style: AppText.label),
+          Text(t('calc_section_asr'), style: AppText.label),
           Column(
             spacing: 8,
             children: [
               _Option(
-                label: 'Hanafi',
-                note: 'Later Asr (shadow = 2x object)',
+                label: t('asr_hanafi'),
+                note: t('asr_hanafi_note'),
                 selected: asr == Madhab.hanafi,
                 onTap: () =>
                     ref.read(asrProvider.notifier).select(Madhab.hanafi),
               ),
               _Option(
-                label: 'Shafi',
-                note: 'Earlier Asr (shadow = 1x object)',
+                label: t('asr_shafi'),
+                note: t('asr_shafi_note'),
                 selected: asr == Madhab.shafi,
                 onTap: () =>
                     ref.read(asrProvider.notifier).select(Madhab.shafi),

@@ -32,7 +32,11 @@ class PrayerLogScreen extends ConsumerWidget {
           ),
           Text(DateFormat('MMMM y').format(today), style: AppText.caption),
           MonthCalendar(month: today, today: today, log: log),
-          const _Legend(),
+          _Legend(
+            all: t('legend_all'),
+            some: t('legend_some'),
+            missed: t('legend_missed'),
+          ),
         ],
       ),
     );
@@ -40,16 +44,20 @@ class PrayerLogScreen extends ConsumerWidget {
 }
 
 class _Legend extends StatelessWidget {
-  const _Legend();
+  const _Legend({required this.all, required this.some, required this.missed});
+
+  final String all;
+  final String some;
+  final String missed;
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       spacing: 16,
       children: [
-        _LegendItem(color: AppColors.green, label: 'All 5'),
-        _LegendItem(color: AppColors.gold, label: 'Some'),
-        _LegendItem(color: AppColors.line, label: 'Missed'),
+        _LegendItem(color: AppColors.green, label: all),
+        _LegendItem(color: AppColors.gold, label: some),
+        _LegendItem(color: AppColors.line, label: missed),
       ],
     );
   }

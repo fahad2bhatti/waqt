@@ -5,6 +5,7 @@ import 'package:waqt/core/config/features.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/utils/time_format.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_mode_status_card.dart';
@@ -26,6 +27,7 @@ class HomeScreen extends ConsumerWidget {
     final city = ref.watch(cityProvider);
     final appCount = ref.watch(blockedAppsProvider).length;
     final log = ref.read(prayerLogProvider.notifier);
+    final t = ref.watch(translationProvider);
 
     return AppPage(
       children: [
@@ -45,9 +47,10 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         NextPrayerCard(
-          name: next.name,
+          title: t('next_prayer'),
+          name: t(next.name),
           time: formatTime(next.time),
-          countdown: formatCountdown(next.time.difference(now)),
+          countdown: formatCountdown(next.time.difference(now), t),
         ),
         Column(
           spacing: 8,

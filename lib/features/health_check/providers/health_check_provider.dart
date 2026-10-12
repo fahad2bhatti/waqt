@@ -48,7 +48,8 @@ final healthChecksProvider = Provider<List<HealthCheck>>((ref) {
     check(WaqtPermission.exactAlarms, 'Exact alarms'),
     check(WaqtPermission.battery, 'Battery: no restrictions'),
     if (kPrayerModeEnabled) check(WaqtPermission.usageAccess, 'Usage access'),
-    check(WaqtPermission.overlay, 'Display over other apps'),
+    if (kPrayerModeEnabled)
+      check(WaqtPermission.overlay, 'Display over other apps'),
     check(WaqtPermission.fullScreenIntent, 'Full-screen notifications'),
   ];
 });

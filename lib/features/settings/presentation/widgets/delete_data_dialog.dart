@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/storage/prefs.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/prayer_mode/providers/blocked_apps_provider.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
@@ -49,11 +50,13 @@ Future<void> deleteAllData(WidgetRef ref) async {
     ..invalidate(prayerLogProvider);
 }
 
-class _DeleteDataDialog extends StatelessWidget {
+class _DeleteDataDialog extends ConsumerWidget {
   const _DeleteDataDialog();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = ref.watch(translationProvider);
+
     return Dialog(
       backgroundColor: AppColors.card,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
@@ -65,19 +68,15 @@ class _DeleteDataDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 12,
           children: [
-            const Text(
-              'Delete all data?',
-              style: TextStyle(
+            Text(
+              t('delete_title'),
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
               ),
             ),
-            const Text(
-              'Your prayer log, settings and blocked apps will be removed '
-              'from this device. This cannot be undone.',
-              style: AppText.body,
-            ),
+            Text(t('delete_body'), style: AppText.body),
             const SizedBox(height: 4),
             FilledButton(
               style: FilledButton.styleFrom(
@@ -85,11 +84,11 @@ class _DeleteDataDialog extends StatelessWidget {
                 foregroundColor: AppColors.background,
               ),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Delete'),
+              child: Text(t('delete')),
             ),
             OutlinedButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(t('cancel')),
             ),
           ],
         ),

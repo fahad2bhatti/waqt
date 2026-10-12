@@ -6,7 +6,10 @@ import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/brand_icon.dart';
+import 'package:waqt/core/native/device_health.dart';
 import 'package:waqt/core/utils/translations.dart';
+import 'package:waqt/features/health_check/providers/health_check_provider.dart';
+import 'package:waqt/features/onboarding/data/alert_permissions.dart';
 import 'package:waqt/features/onboarding/data/onboarding_steps.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -18,6 +21,35 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _step = 0;
+  bool _busy = false;
+
+  /// Handles one missing Azan permission per tap, in a fixed order, so the
+  /// user always sees a single clear request. Android settings pages leave the
+  /// app; the status refreshes when the user comes back (permissionsProvider).
+  Future<void> _enableAlerts() async {
+    if (_busy) return;
+    _busy = true;
+    try {
+      final health = ref.read(deviceHealthProvider);
+      final missing = nextMissingAlert(await health.status());
+      if (!mounted) return;
+      if (missing == null) {
+        _next();
+        return;
+      }
+      if (missing == WaqtPermission.notifications) {
+        final answer = await health.requestNotifications();
+        if (answer == NotificationAnswer.blocked) {
+          await health.openSettings(missing);
+        }
+      } else {
+        await health.openSettings(missing);
+      }
+      if (mounted) await ref.read(permissionsProvider.notifier).refresh();
+    } finally {
+      _busy = false;
+    }
+  }
 
   void _next() {
     if (_step == onboardingSteps.length - 1) {
@@ -32,6 +64,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     final t = ref.watch(translationProvider);
     final step = onboardingSteps[_step];
+    final status = step.requestsAlerts
+        ? ref.watch(permissionsProvider).value
+        : null;
+    final missing = status == null ? null : nextMissingAlert(status);
+    final alertsDone = status != null && missing == null;
 
     return Scaffold(
       body: SafeArea(
@@ -84,12 +121,44 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ],
                 ),
               ],
+              if (status != null) ...[
+                const SizedBox(height: 16),
+                Column(
+                  spacing: 8,
+                  children: [
+                    for (final permission in alertPermissions)
+                      AppRow(
+                        label: t('alert_${permission.name}'),
+                        value: status[permission] == true
+                            ? t('health_ok')
+                            : t('health_not_ok'),
+                        valueColor: status[permission] == true
+                            ? AppColors.green
+                            : AppColors.gold,
+                      ),
+                  ],
+                ),
+                if (missing != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    t('alert_hint_${missing.name}'),
+                    textAlign: TextAlign.center,
+                    style: AppText.caption,
+                  ),
+                ],
+              ],
               const Spacer(),
               FilledButton(
-                onPressed: _next,
-                child: Text(_translateStepPrimary(_step, t)),
+                onPressed: step.requestsAlerts && !alertsDone
+                    ? _enableAlerts
+                    : _next,
+                child: Text(
+                  alertsDone
+                      ? t('onboard_3_primary')
+                      : _translateStepPrimary(_step, t),
+                ),
               ),
-              if (step.secondary != null)
+              if (step.secondary != null && !alertsDone)
                 TextButton(
                   onPressed: step.secondaryRoute == null
                       ? _next

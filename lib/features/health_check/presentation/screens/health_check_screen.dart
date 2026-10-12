@@ -34,7 +34,7 @@ class HealthCheckScreen extends ConsumerWidget {
             children: [
               for (final check in checks)
                 AppRow(
-                  label: check.label,
+                  label: t('health_${check.permission.name}'),
                   value: check.ok ? t('health_ok') : t('health_not_ok'),
                   valueColor: check.ok ? AppColors.green : AppColors.gold,
                   onTap: check.ok
@@ -51,17 +51,15 @@ class HealthCheckScreen extends ConsumerWidget {
               try {
                 await ref.read(azanSchedulerProvider).scheduleTest(seconds: 10);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Test Azan scheduled for 10s'),
-                    ),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(t('test_scheduled'))));
                 }
               } catch (e) {
                 debugPrint('Error scheduling test azan: $e');
               }
             },
-            child: const Text('Test Azan (10 s)'),
+            child: Text(t('test_azan')),
           ),
           const SizedBox(height: 16),
           Text(

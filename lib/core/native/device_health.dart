@@ -10,6 +10,10 @@ enum WaqtPermission {
   fullScreenIntent,
 }
 
+/// Outcome of the Android notification dialog. [blocked] means Android will
+/// not show it again, so the only way left is the system settings page.
+enum NotificationAnswer { granted, denied, blocked }
+
 class DeviceHealth {
   static const _channel = MethodChannel('com.fahadapps.waqt/health');
 
@@ -35,6 +39,20 @@ class DeviceHealth {
     } on PlatformException catch (error) {
       debugPrint('DeviceHealth.status failed: ${error.message}');
       return _allGranted;
+    }
+  }
+
+  Future<NotificationAnswer> requestNotifications() async {
+    if (!_supported) return NotificationAnswer.granted;
+    try {
+      final raw = await _channel.invokeMethod<String>('requestNotifications');
+      return NotificationAnswer.values.asNameMap()[raw] ??
+          NotificationAnswer.denied;
+    } on MissingPluginException {
+      return NotificationAnswer.granted;
+    } on PlatformException catch (error) {
+      debugPrint('DeviceHealth.requestNotifications failed: ${error.message}');
+      return NotificationAnswer.denied;
     }
   }
 

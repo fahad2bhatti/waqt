@@ -12,7 +12,6 @@ import 'package:waqt/core/config/features.dart';
 import 'package:waqt/features/prayer_times/data/calculation_options.dart';
 import 'package:waqt/features/settings/providers/adjustments_provider.dart';
 import 'package:waqt/features/settings/providers/calculation_provider.dart';
-import 'package:waqt/features/settings/providers/language_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -31,82 +30,75 @@ class SettingsScreen extends ConsumerWidget {
         .watch(adjustmentsProvider)
         .values
         .any((minutes) => minutes != 0);
-    final language = ref.watch(languageProvider);
     final method = ref.watch(calcMethodProvider);
     final asr = ref.watch(asrProvider);
 
     return AppPage(
       children: [
         Text(t('settings'), style: AppText.title),
-        Text('PRAYER TIMES', style: AppText.label),
+        Text(t('section_prayer_times'), style: AppText.label),
         Column(
           spacing: 8,
           children: [
             AppRow(
-              label: 'Location',
+              label: t('location'),
               value: city.name,
               valueColor: AppColors.gold,
               onTap: () => context.push('/city-search'),
             ),
             AppRow(
-              label: 'Calculation method',
-              value: method.label,
+              label: t('calc_method'),
+              value: t('method_${method.name}'),
               valueColor: AppColors.gold,
               onTap: () => context.push('/calculation'),
             ),
             AppRow(
-              label: 'Asr',
-              value: asrLabel(asr),
+              label: t('Asr'),
+              value: t('asr_${asrLabel(asr).toLowerCase()}'),
               valueColor: AppColors.gold,
               onTap: () => context.push('/calculation'),
             ),
             AppRow(
-              label: 'Adjustments',
-              value: adjusted ? 'Custom' : '0 min',
+              label: t('adjustments'),
+              value: adjusted ? t('custom') : '0 ${t('min_short')}',
               onTap: () => context.push('/adjustments'),
             ),
           ],
         ),
-        Text('AZAN AND MODE', style: AppText.label),
+        Text(t('section_azan_mode'), style: AppText.label),
         Column(
           spacing: 8,
           children: [
             AppRow(
               label: t('azan_sound'),
-              value: 'Configure',
+              value: t('configure'),
               onTap: () => context.push('/alarm-settings'),
             ),
             if (kPrayerModeEnabled)
               const AppRow(label: 'Prayer window', value: '20 min'),
             AppRow(
-              label: 'Azan protection',
-              value: 'Check',
+              label: t('azan_protection'),
+              value: t('check'),
               valueColor: AppColors.gold,
               onTap: () => context.push('/health-check'),
             ),
             AppRow(label: t('qibla'), onTap: () => context.push('/qibla')),
           ],
         ),
-        Text('APP', style: AppText.label),
+        Text(t('section_app'), style: AppText.label),
         Column(
           spacing: 8,
           children: [
             AppRow(
               label: t('language'),
-              value: language,
+              value: t('lang_name'),
               onTap: () => context.push('/language'),
             ),
             AppRow(label: t('about'), onTap: () => context.push('/about')),
+            AppRow(label: t('terms'), onTap: () => context.push('/terms')),
+            AppRow(label: t('privacy'), onTap: () => context.push('/privacy')),
             AppRow(
-              label: 'Terms & Conditions',
-              onTap: () => context.push('/terms'),
-            ),
-            AppRow(
-              label: 'Privacy Policy',
-              onTap: () => context.push('/privacy'),
-            ),
-            AppRow(
-              label: 'Licenses',
+              label: t('licenses'),
               onTap: () => showLicensePage(
                 context: context,
                 applicationName: 'Waqt',

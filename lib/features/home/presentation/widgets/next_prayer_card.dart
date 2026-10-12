@@ -4,11 +4,13 @@ import 'package:waqt/app/theme/app_colors.dart';
 class NextPrayerCard extends StatelessWidget {
   const NextPrayerCard({
     super.key,
+    required this.title,
     required this.name,
     required this.time,
     required this.countdown,
   });
 
+  final String title;
   final String name;
   final String time;
   final String countdown;
@@ -25,12 +27,11 @@ class NextPrayerCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'NEXT PRAYER',
-            style: TextStyle(
+          Text(
+            title,
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
               color: AppColors.gold,
             ),
           ),

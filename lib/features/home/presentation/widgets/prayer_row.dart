@@ -28,9 +28,9 @@ class PrayerRow extends ConsumerWidget {
             style: const TextStyle(fontSize: 15, color: AppColors.textPrimary),
           ),
           if (next)
-            const Text(
-              'Next',
-              style: TextStyle(
+            Text(
+              t('next_label'),
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: AppColors.gold,

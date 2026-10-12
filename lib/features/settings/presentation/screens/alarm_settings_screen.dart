@@ -31,8 +31,10 @@ class AlarmSettingsScreen extends ConsumerWidget {
             children: [
               for (final sound in sounds)
                 AppRow(
-                  label: sound,
-                  value: sound == soundState.sound ? 'Selected' : 'Select',
+                  label: t('sound_$sound'),
+                  value: sound == soundState.sound
+                      ? t('selected')
+                      : t('select'),
                   valueColor: sound == soundState.sound
                       ? AppColors.gold
                       : AppColors.textMuted,
@@ -42,12 +44,12 @@ class AlarmSettingsScreen extends ConsumerWidget {
           ),
 
           const SizedBox(height: 24),
-          Text('Additional Options', style: AppText.label),
+          Text(t('additional_options'), style: AppText.label),
           Column(
             spacing: 8,
             children: [
               AppRow(
-                label: 'Different Azan for Fajr',
+                label: t('different_fajr'),
                 trailing: Switch(
                   value: soundState.differentFajr,
                   onChanged: soundNotifier.setDifferentFajr,

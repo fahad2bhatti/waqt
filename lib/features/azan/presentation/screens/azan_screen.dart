@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waqt/app/theme/app_colors.dart';
+import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/azan/providers/azan_bridge.dart';
 import 'package:waqt/features/azan/providers/azan_playback_provider.dart';
@@ -184,25 +185,79 @@ class _RemindRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 10,
+      spacing: 12,
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 6,
+          children: [
+            const Icon(Icons.snooze, size: 16, color: AppColors.textMuted),
+            Text(title, style: AppText.label),
+          ],
         ),
         Row(
           spacing: 10,
           children: [
             for (final minutes in _options)
               Expanded(
-                child: OutlinedButton(
-                  onPressed: () => onSelect(minutes),
-                  child: Text('$minutes $unit'),
+                child: _RemindChip(
+                  minutes: minutes,
+                  unit: unit,
+                  onTap: () => onSelect(minutes),
                 ),
               ),
           ],
         ),
       ],
+    );
+  }
+}
+
+class _RemindChip extends StatelessWidget {
+  const _RemindChip({
+    required this.minutes,
+    required this.unit,
+    required this.onTap,
+  });
+
+  final int minutes;
+  final String unit;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: '$minutes $unit',
+      excludeSemantics: true,
+      child: Material(
+        color: AppColors.card,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.line),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '$minutes',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.gold,
+                  ),
+                ),
+                Text(unit, style: AppText.caption),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

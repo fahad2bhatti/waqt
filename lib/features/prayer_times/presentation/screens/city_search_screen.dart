@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
+import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/app_search_field.dart';
 import 'package:waqt/features/prayer_times/data/cities.dart';
@@ -20,6 +21,7 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = ref.watch(translationProvider);
     final query = _query.toLowerCase();
     final results = [
       for (final city in cities)
@@ -37,16 +39,13 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 16,
             children: [
-              const Text('Choose city', style: AppText.title),
+              Text(t('choose_city'), style: AppText.title),
               AppSearchField(
-                hint: 'Search city',
+                hint: t('search_city'),
                 onChanged: (value) => setState(() => _query = value),
               ),
-              const AppRow(
-                label: 'Use current location',
-                labelColor: AppColors.green,
-              ),
-              const Text('RESULTS', style: AppText.label),
+              AppRow(label: t('use_location'), labelColor: AppColors.green),
+              Text(t('results'), style: AppText.label),
               Expanded(
                 child: ListView.separated(
                   itemCount: results.length,

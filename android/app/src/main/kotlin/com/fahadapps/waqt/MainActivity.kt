@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,11 +17,16 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
+    companion object {
+        private const val NOTIFICATION_REQUEST = 1001
+    }
+
     private lateinit var blockerChannel: MethodChannel
     private var azanChannel: MethodChannel? = null
     private var launchedForAzan = false
     private var visible = false
     private var closeAfterAzan = false
+    private var pendingNotificationResult: MethodChannel.Result? = null
 
     private val blockerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -84,6 +90,41 @@ class MainActivity : FlutterActivity() {
         )
     }
 
+    // Asks for POST_NOTIFICATIONS. Answers "granted", "denied" (can be asked
+    // again) or "blocked" (Android will not show the dialog any more).
+    private fun requestNotifications(result: MethodChannel.Result?) {
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+        val granted = Build.VERSION.SDK_INT < 33 ||
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+        if (granted) {
+            result?.success("granted")
+            return
+        }
+        val prefs = getSharedPreferences("waqt_azan", Context.MODE_PRIVATE)
+        val blocked = prefs.getBoolean("notification_asked", false) &&
+            !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+        if (blocked || pendingNotificationResult != null) {
+            result?.success(if (blocked) "blocked" else "denied")
+            return
+        }
+        prefs.edit().putBoolean("notification_asked", true).apply()
+        pendingNotificationResult = result
+        ActivityCompat.requestPermissions(this, arrayOf(permission), NOTIFICATION_REQUEST)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != NOTIFICATION_REQUEST) return
+        val pending = pendingNotificationResult ?: return
+        pendingNotificationResult = null
+        val granted = grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED
+        pending.success(if (granted) "granted" else "denied")
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
@@ -124,13 +165,7 @@ class MainActivity : FlutterActivity() {
                 }
 
                 "requestNotificationPermission" -> {
-                    if (Build.VERSION.SDK_INT >= 33) {
-                        ActivityCompat.requestPermissions(
-                            this,
-                            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                            1001,
-                        )
-                    }
+                    requestNotifications(null)
                     result.success(null)
                 }
 
@@ -211,6 +246,8 @@ class MainActivity : FlutterActivity() {
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "status" -> result.success(DeviceHealth.status(this))
+
+                    "requestNotifications" -> requestNotifications(result)
 
                     "openSettings" -> {
                         val key = call.argument<String>("key") ?: ""

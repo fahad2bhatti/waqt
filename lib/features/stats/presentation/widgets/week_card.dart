@@ -3,8 +3,14 @@ import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 
 class WeekCard extends StatelessWidget {
-  const WeekCard({super.key, required this.percent, required this.bars});
+  const WeekCard({
+    super.key,
+    required this.title,
+    required this.percent,
+    required this.bars,
+  });
 
+  final String title;
   final int percent;
   final List<(String, double)> bars;
 
@@ -20,7 +26,7 @@ class WeekCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12,
         children: [
-          const Text('Prayer consistency', style: AppText.caption),
+          Text(title, style: AppText.caption),
           Text(
             '$percent%',
             style: const TextStyle(
