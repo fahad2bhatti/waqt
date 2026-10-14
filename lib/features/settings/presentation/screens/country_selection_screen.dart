@@ -4,12 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/utils/translations.dart';
-import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/features/prayer_times/data/countries.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
-import 'package:waqt/features/settings/providers/calculation_provider.dart';
-import 'package:waqt/features/settings/providers/adjustments_provider.dart';
-import 'package:adhan_dart/adhan_dart.dart';
 import 'package:go_router/go_router.dart';
 
 class CountrySelectionScreen extends ConsumerStatefulWidget {
@@ -43,7 +39,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     final city = getCityForPlayStoreCountry(_selectedCountryCode);
     if (city != null) {
       // Set city and country
-      ref.read(selectedCityProvider.notifier).state = city;
+      ref.read(cityProvider.notifier).select(city);
       ref.read(selectedCountryProvider.notifier).state = countryByCode(_selectedCountryCode);
       ref.read(prefsProvider).setString('last_country', _selectedCountryCode);
       

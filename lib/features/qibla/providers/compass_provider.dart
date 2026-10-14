@@ -15,7 +15,7 @@ final compassProvider = StreamProvider.autoDispose<CompassReading>((ref) {
   }
   final city = ref.watch(cityProvider);
   return _channel
-      .receiveBroadcastStream({'lat': city.latitude, 'lon': city.longitude})
+      .receiveBroadcastStream({'lat': city.lat, 'lon': city.lng})
       .map((event) {
         final map = event as Map;
         return (
@@ -27,5 +27,5 @@ final compassProvider = StreamProvider.autoDispose<CompassReading>((ref) {
 
 final qiblaBearingProvider = Provider<double>((ref) {
   final city = ref.watch(cityProvider);
-  return qiblaBearing(city.latitude, city.longitude);
+  return qiblaBearing(city.lat, city.lng);
 });

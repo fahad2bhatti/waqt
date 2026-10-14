@@ -22,7 +22,7 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
   String? _selectedCountry;
 
   // helper methods ke liye (build ka local `t` shadow karta hai)
-  get t => ref.read(translationProvider);
+  dynamic get t => ref.read(translationProvider);
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
                       label: '${city.name}, ${city.country}',
                       value: city.timezone,
                       onTap: () {
-                        ref.read(selectedCityProvider.notifier).state = city;
+                        ref.read(cityProvider.notifier).select(city);
                         context.pop();
                       },
                     );
