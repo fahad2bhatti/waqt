@@ -1,7 +1,7 @@
+import 'package:waqt/features/prayer_times/data/countries.dart';
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waqt/features/prayer_times/data/calculation_options.dart';
-import 'package:waqt/features/prayer_times/data/cities.dart';
 import 'package:waqt/features/prayer_times/data/prayer_calculator.dart';
 
 void main() {

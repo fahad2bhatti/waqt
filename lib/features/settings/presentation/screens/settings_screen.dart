@@ -1,3 +1,4 @@
+import 'package:waqt/features/prayer_times/data/countries.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -45,6 +46,12 @@ class SettingsScreen extends ConsumerWidget {
               value: city.name,
               valueColor: AppColors.gold,
               onTap: () => context.push('/city-search'),
+            ),
+            AppRow(
+              label: 'Country',
+              value: city.country,
+              valueColor: AppColors.gold,
+              onTap: () => context.push('/country'),
             ),
             AppRow(
               label: t('calc_method'),

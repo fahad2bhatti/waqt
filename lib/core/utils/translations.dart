@@ -97,7 +97,8 @@ class TranslationService {
     },
     'onboard_3_title': {'en': 'Calculation settings', 'ur': 'حساب کی ترتیبات'},
     'onboard_3_body': {
-      'en': 'Pakistan defaults are selected. You can change these anytime.',
+      'en':
+          'Pakistan defaults are selected. You can change these anytime.',
       'ur':
           'پاکستان کے ڈیفالٹ سیٹنگز منتخب ہیں۔ آپ انہیں کسی بھی وقت تبدیل کر سکتے ہیں۔',
     },
@@ -162,7 +163,7 @@ class TranslationService {
     'onboard_5_secondary': {'en': 'Maybe later', 'ur': 'شاید بعد میں'},
     'qibla_turn': {
       'en': 'Turn until the marker points up',
-      'ur': 'نشان اوپر کی طرف آنے تک گھومیں',
+      'ur': 'نشان اوپر کی طرف آنے تک گژومیں',
     },
     'qibla_found': {'en': 'Qibla found', 'ur': 'قبلہ مل گیا'},
     'compass_calibrate': {
@@ -336,6 +337,42 @@ class TranslationService {
     'test_scheduled': {
       'en': 'Test Azan scheduled for 10s',
       'ur': 'ٹیسٹ اذان 10 سیکنڈ میں بجے گی',
+    },
+    // Location & Country Selection
+    'location_detected': {
+      'en': 'Location detected',
+      'ur': 'مقام تلاش کیا گیا',
+    },
+    'location_auto_selected': {
+      'en': 'Using detected location: {city}',
+      'ur': 'تلاش کیا گیا مقام استعمال کریں: {city}',
+    },
+    'detect_location': {
+      'en': 'Detect location',
+      'ur': 'مقام تلاش کریں',
+    },
+    'permission_denied': {
+      'en': 'Location permission denied',
+      'ur': 'لوکیشن کی اجازت دتری کی گئی',
+    },
+    'permission_explanation': {
+      'en':
+          'To accurately detect your prayer times, we need your location. You can also choose a city manually.',
+      'ur':
+          'اپنے نماز کے اوقات کے لیے درستگی سے تلاش کرنے کے لیے ہم آپ کی لوکیشن کی ضرورت ہے۔ آپ شہر دستی طور پر بھی منتخب کر سکتے ہیں۔',
+    },
+    'country_section': {'en': 'COUNTRY', 'ur': 'ملک'},
+    'country_default': {
+      'en': 'Detected country: {country}',
+      'ur': 'تلاش کیا گیا ملک: {country}',
+    },
+    'play_store_country': {
+      'en': 'Play Store country',
+      'ur': 'پلے اسٹور کا ملک',
+    },
+    'auto_detect_success': {
+      'en': 'Location detected automatically',
+      'ur': 'خود بخود مقام تلاش کیا گیا',
     },
   };
 

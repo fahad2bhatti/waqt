@@ -26,6 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Waqt needs your location to calculate accurate prayer times.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Waqt needs your location to calculate accurate prayer times. You can also choose a city manually from settings.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

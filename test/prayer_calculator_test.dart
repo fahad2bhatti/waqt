@@ -6,10 +6,9 @@ import 'package:waqt/features/tracking/providers/prayer_log_provider.dart';
 void main() {
   final city = City(
     name: 'Karachi',
-    country: 'Pakistan',
     timezone: 'PKT',
-    latitude: 24.8607,
-    longitude: 67.0011,
+    lat: 24.8607,
+    lng: 67.0011,
   );
   final adjustments = <String, int>{};
 

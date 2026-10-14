@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract final class PrefKeys {
   static const onboarded = 'onboarded';
   static const city = 'city';
+  static const country = 'country'; // Play Store country code for default city
   static const adjustments = 'adjustments';
   static const azanSound = 'azan_sound';
   static const differentFajr = 'azan_different_fajr';
