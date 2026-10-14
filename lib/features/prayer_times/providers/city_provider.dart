@@ -1,21 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:waqt/core/storage/prefs.dart';
 import 'package:waqt/features/prayer_times/data/cities.dart';
+import 'package:waqt/features/prayer_times/data/countries.dart';
 
-class CityNotifier extends Notifier<City> {
-  @override
-  City build() {
-    final saved = ref.read(prefsProvider).getString(PrefKeys.city);
-    return cities.firstWhere(
-      (city) => city.name == saved,
-      orElse: () => cities.first,
-    );
-  }
+final selectedCountryProvider = StateProvider<Country?>((ref) {
+  return countries.firstWhere((c) => c.code == 'PK');
+});
 
-  void select(City city) {
-    state = city;
-    ref.read(prefsProvider).setString(PrefKeys.city, city.name);
-  }
-}
+final selectedCityProvider = StateProvider<City?>((ref) {
+  return pakistanCities.firstWhere((c) => c.name == 'Faisalabad');
+});
 
-final cityProvider = NotifierProvider<CityNotifier, City>(CityNotifier.new);
+final isUsingCurrentLocationProvider = StateProvider<bool>((ref) => false);

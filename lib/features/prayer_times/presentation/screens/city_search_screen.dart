@@ -7,6 +7,7 @@ import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/app_search_field.dart';
 import 'package:waqt/features/prayer_times/data/cities.dart';
+import 'package:waqt/features/prayer_times/data/countries.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
 
 class CitySearchScreen extends ConsumerStatefulWidget {
@@ -18,13 +19,25 @@ class CitySearchScreen extends ConsumerStatefulWidget {
 
 class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
   String _query = '';
+  String? _selectedCountry;
 
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(translationProvider);
     final query = _query.toLowerCase();
+    final selectedCountry = _selectedCountry;
+    
+    // Filter cities by country first
+    List<City> allFilteredCities;
+    if (selectedCountry != null && selectedCountry != 'DEFAULT') {
+      allFilteredCities = cities.where((city) => city.countryCode == selectedCountry).toList();
+    } else {
+      allFilteredCities = cities;
+    }
+    
+    // Then filter by search query
     final results = [
-      for (final city in cities)
+      for (final city in allFilteredCities)
         if (city.name.toLowerCase().contains(query) ||
             city.country.toLowerCase().contains(query))
           city,
@@ -44,7 +57,42 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
                 hint: t('search_city'),
                 onChanged: (value) => setState(() => _query = value),
               ),
-              AppRow(label: t('use_location'), labelColor: AppColors.green),
+              // Country selector
+              DropdownButtonFormField<String>(
+                value: _selectedCountry,
+                decoration: InputDecoration(
+                  labelText: 'Country',
+                  labelStyle: const TextStyle(color: AppColors.textMuted),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppColors.line),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppColors.line),
+                  ),
+                ),
+                dropdownColor: AppColors.background,
+                style: const TextStyle(color: AppColors.textPrimary, fontSize: 15),
+                items: countries.map((country) {
+                  return DropdownMenuItem(
+                    value: country.code,
+                    child: Text(country.name),
+                  );
+                }).toList(),
+                onChanged: (value) => setState(() {
+                  _selectedCountry = value;
+                  _query = ''; // Clear search when country changes
+                }),
+              ),
+              AppRow(
+                label: t('use_location'),
+                labelColor: AppColors.green,
+                onTap: () {
+                  // Navigate to location detection screen or show location modal
+                  _showLocationDetectionDialog();
+                },
+              ),
               Text(t('results'), style: AppText.label),
               Expanded(
                 child: ListView.separated(
@@ -68,5 +116,35 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
         ),
       ),
     );
+  }
+
+  void _showLocationDetectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.card,
+        title: Text(
+          t('detect_location'),
+          style: const TextStyle(color: AppColors.textPrimary),
+        ),
+        content: Text(
+          t('permission_explanation'),
+          style: const TextStyle(color: AppColors.textMuted),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              t('cancel'),
+              style: const TextStyle(color: AppColors.textMuted),
+            ),
+          ),
+        ],
+      ),
+    );
+    
+    // TODO: Implement actual location detection
+    // This would call the location service to detect the user's position
+    // and auto-select the closest city
   }
 }

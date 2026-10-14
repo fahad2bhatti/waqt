@@ -17,6 +17,7 @@ import 'package:waqt/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/about_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/adjustments_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/calculation_screen.dart';
+import 'package:waqt/features/settings/presentation/screens/country_selection_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/language_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/settings_screen.dart';
 import 'package:waqt/features/settings/presentation/screens/alarm_settings_screen.dart';
@@ -58,8 +59,12 @@ final appRouter = GoRouter(
     ),
     GoRoute(path: '/calculation', builder: (_, _) => const CalculationScreen()),
     GoRoute(path: '/language', builder: (_, _) => const LanguageScreen()),
+    GoRoute(path: '/country', builder: (_, _) => const CountrySelectionScreen()),
     GoRoute(path: '/about', builder: (_, _) => const AboutScreen()),
-    GoRoute(path: '/prayer-log', builder: (_, _) => const PrayerLogScreen()),
+    GoRoute(
+      path: '/prayer-log',
+      builder: (_, _) => const PrayerLogScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => AppShell(navigationShell: shell),
       branches: [

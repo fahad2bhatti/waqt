@@ -47,6 +47,12 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => context.push('/city-search'),
             ),
             AppRow(
+              label: 'Country',
+              value: city.country,
+              valueColor: AppColors.gold,
+              onTap: () => context.push('/country'),
+            ),
+            AppRow(
               label: t('calc_method'),
               value: t('method_${method.name}'),
               valueColor: AppColors.gold,
