@@ -19,10 +19,7 @@ class LocationService {
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
       return await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.medium,
-          distanceFilter: 100,
-        ),
+        desiredAccuracy: LocationAccuracy.medium,
       );
     }
 

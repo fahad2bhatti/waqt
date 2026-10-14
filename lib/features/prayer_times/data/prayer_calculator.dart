@@ -24,7 +24,7 @@ PrayerTimes calculatePrayerTimes({
     params.adjustments[value] = adjustments[key] ?? 0;
   }
   return PrayerTimes(
-    coordinates: Coordinates(city.latitude, city.longitude),
+    coordinates: Coordinates(city.lat, city.lng),
     date: date,
     calculationParameters: params,
   );

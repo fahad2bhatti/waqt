@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:waqt/features/prayer_times/data/cities.dart';
 import 'package:waqt/features/prayer_times/data/countries.dart';
 
@@ -11,3 +12,8 @@ final selectedCityProvider = StateProvider<City?>((ref) {
 });
 
 final isUsingCurrentLocationProvider = StateProvider<bool>((ref) => false);
+
+/// Compat: purani files ke liye (read-only City)
+final cityProvider = Provider<City>(
+  (ref) => ref.watch(selectedCityProvider) ?? pakistanCities.first,
+);

@@ -21,6 +21,9 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
   String _query = '';
   String? _selectedCountry;
 
+  // helper methods ke liye (build ka local `t` shadow karta hai)
+  get t => ref.read(translationProvider);
+
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(translationProvider);
@@ -59,7 +62,7 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
               ),
               // Country selector
               DropdownButtonFormField<String>(
-                value: _selectedCountry,
+                initialValue: _selectedCountry,
                 decoration: InputDecoration(
                   labelText: 'Country',
                   labelStyle: const TextStyle(color: AppColors.textMuted),
@@ -104,7 +107,7 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
                       label: '${city.name}, ${city.country}',
                       value: city.timezone,
                       onTap: () {
-                        ref.read(cityProvider.notifier).select(city);
+                        ref.read(selectedCityProvider.notifier).state = city;
                         context.pop();
                       },
                     );

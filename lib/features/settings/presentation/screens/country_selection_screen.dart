@@ -1,3 +1,4 @@
+import 'package:waqt/core/storage/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waqt/app/theme/app_colors.dart';
@@ -42,8 +43,9 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     final city = getCityForPlayStoreCountry(_selectedCountryCode);
     if (city != null) {
       // Set city and country
-      ref.read(cityProvider.notifier).select(city);
-      ref.read(prefsProvider.overrideWithValue(ref.read(prefsProvider))).setString('last_country', _selectedCountryCode);
+      ref.read(selectedCityProvider.notifier).state = city;
+      ref.read(selectedCountryProvider.notifier).state = countryByCode(_selectedCountryCode);
+      ref.read(prefsProvider).setString('last_country', _selectedCountryCode);
       
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
@@ -87,7 +89,7 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                 style: AppText.body.copyWith(color: AppColors.textMuted),
               ),
               DropdownButtonFormField<String>(
-                value: _selectedCountryCode.isEmpty ? null : _selectedCountryCode,
+                initialValue: _selectedCountryCode.isEmpty ? null : _selectedCountryCode,
                 decoration: InputDecoration(
                   labelText: t('play_store_country'),
                   labelStyle: const TextStyle(color: AppColors.textMuted),

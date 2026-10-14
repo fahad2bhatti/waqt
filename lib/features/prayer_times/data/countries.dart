@@ -46,3 +46,37 @@ const List<Country> countries = [
     cities: indiaCities,
   ),
 ];
+
+
+City? getCityForPlayStoreCountry(String code) {
+  for (final c in countries) {
+    if (c.code == code) return c.cities.isEmpty ? null : c.cities.first;
+  }
+  return null;
+}
+
+Country? countryByCode(String code) {
+  for (final c in countries) {
+    if (c.code == code) return c;
+  }
+  return null;
+}
+
+/// Compat: purani screens ka flat list
+List<City> get cities => [for (final c in countries) ...c.cities];
+
+extension CityCountryX on City {
+  String get country {
+    for (final c in countries) {
+      if (c.cities.contains(this)) return c.name;
+    }
+    return '';
+  }
+
+  String get countryCode {
+    for (final c in countries) {
+      if (c.cities.contains(this)) return c.code;
+    }
+    return '';
+  }
+}
