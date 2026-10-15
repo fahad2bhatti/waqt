@@ -12,18 +12,57 @@ class CountrySelectionScreen extends ConsumerStatefulWidget {
   const CountrySelectionScreen({super.key});
 
   @override
-  ConsumerState<CountrySelectionScreen> createState() => _CountrySelectionScreenState();
+  ConsumerState<CountrySelectionScreen> createState() =>
+      _CountrySelectionScreenState();
 }
 
-class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen> {
+class _CountrySelectionScreenState
+    extends ConsumerState<CountrySelectionScreen> {
   String _selectedCountryCode = '';
 
   final List<String> _sortOrder = [
-    'PK', 'SA', 'AE', 'QA', 'KW', 'BH', 'OM', 'IL', 'IN', 'BD', 'NP', 'LK', 'MV',
-    'SG', 'MY', 'ID', 'PH', 'TH', 'TR',
-    'EG', 'MA', 'TN', 'KE',
-    'GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'SE', 'NO', 'DK', 'FI', 'PL', 'AT', 'CH', 'IE',
-    'US', 'CA', 'BR', 'MX', 'AR',
+    'PK',
+    'SA',
+    'AE',
+    'QA',
+    'KW',
+    'BH',
+    'OM',
+    'IL',
+    'IN',
+    'BD',
+    'NP',
+    'LK',
+    'MV',
+    'SG',
+    'MY',
+    'ID',
+    'PH',
+    'TH',
+    'TR',
+    'EG',
+    'MA',
+    'TN',
+    'KE',
+    'GB',
+    'DE',
+    'FR',
+    'IT',
+    'ES',
+    'NL',
+    'SE',
+    'NO',
+    'DK',
+    'FI',
+    'PL',
+    'AT',
+    'CH',
+    'IE',
+    'US',
+    'CA',
+    'BR',
+    'MX',
+    'AR',
   ];
 
   @override
@@ -40,16 +79,16 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
     if (city != null) {
       // Set city and country
       ref.read(cityProvider.notifier).select(city);
-      ref.read(selectedCountryProvider.notifier).state = countryByCode(_selectedCountryCode);
+      ref.read(selectedCountryProvider.notifier).state = countryByCode(
+        _selectedCountryCode,
+      );
       ref.read(prefsProvider).setString('last_country', _selectedCountryCode);
-      
+
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Updated to ${city.name}, ${city.country}'),
-        ),
+        SnackBar(content: Text('Updated to ${city.name}, ${city.country}')),
       );
-      
+
       // Go back
       context.pop();
     }
@@ -85,7 +124,9 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                 style: AppText.body.copyWith(color: AppColors.textMuted),
               ),
               DropdownButtonFormField<String>(
-                initialValue: _selectedCountryCode.isEmpty ? null : _selectedCountryCode,
+                initialValue: _selectedCountryCode.isEmpty
+                    ? null
+                    : _selectedCountryCode,
                 decoration: InputDecoration(
                   labelText: t('play_store_country'),
                   labelStyle: const TextStyle(color: AppColors.textMuted),
@@ -95,10 +136,13 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                   ),
                 ),
                 dropdownColor: AppColors.background,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 15),
-                items: sortedCountries
-                    .where((c) => c.code != 'DEFAULT')
-                    .map((country) {
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 15,
+                ),
+                items: sortedCountries.where((c) => c.code != 'DEFAULT').map((
+                  country,
+                ) {
                   return DropdownMenuItem(
                     value: country.code,
                     child: Text(country.name),
@@ -149,7 +193,9 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: _selectedCountryCode.isEmpty ? null : _applySelection,
+                onPressed: _selectedCountryCode.isEmpty
+                    ? null
+                    : _applySelection,
                 icon: const Icon(Icons.check),
                 label: Text(t('apply')),
                 style: ElevatedButton.styleFrom(
@@ -170,10 +216,10 @@ class _CountrySelectionScreenState extends ConsumerState<CountrySelectionScreen>
 
   String _getCountryDefaultInfo() {
     if (_selectedCountryCode.isEmpty) return 'None selected';
-    
+
     final city = getCityForPlayStoreCountry(_selectedCountryCode);
     if (city == null) return 'No default city';
-    
+
     return '${city.name}, ${city.country}';
   }
 }

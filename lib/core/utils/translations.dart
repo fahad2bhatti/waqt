@@ -97,8 +97,7 @@ class TranslationService {
     },
     'onboard_3_title': {'en': 'Calculation settings', 'ur': 'حساب کی ترتیبات'},
     'onboard_3_body': {
-      'en':
-          'Pakistan defaults are selected. You can change these anytime.',
+      'en': 'Pakistan defaults are selected. You can change these anytime.',
       'ur':
           'پاکستان کے ڈیفالٹ سیٹنگز منتخب ہیں۔ آپ انہیں کسی بھی وقت تبدیل کر سکتے ہیں۔',
     },
@@ -339,17 +338,17 @@ class TranslationService {
       'ur': 'ٹیسٹ اذان 10 سیکنڈ میں بجے گی',
     },
     // Location & Country Selection
-    'location_detected': {
-      'en': 'Location detected',
-      'ur': 'مقام تلاش کیا گیا',
-    },
+    'location_detected': {'en': 'Location detected', 'ur': 'مقام تلاش کیا گیا'},
     'location_auto_selected': {
       'en': 'Using detected location: {city}',
       'ur': 'تلاش کیا گیا مقام استعمال کریں: {city}',
     },
-    'detect_location': {
-      'en': 'Detect location',
-      'ur': 'مقام تلاش کریں',
+    'detect_location': {'en': 'Detect location', 'ur': 'مقام تلاش کریں'},
+    'location_failed': {
+      'en':
+          'Could not find a supported city near you. Check location and permission, or choose a city manually.',
+      'ur':
+          'آپ کے قریب کوئی شہر نہیں مل سکا۔ لوکیشن آن اور اجازت چیک کریں، یا شہر دستی طور پر منتخب کریں۔',
     },
     'permission_denied': {
       'en': 'Location permission denied',

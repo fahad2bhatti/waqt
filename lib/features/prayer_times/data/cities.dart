@@ -13,16 +13,31 @@ class City {
 }
 
 const List<City> pakistanCities = [
-  City(name: 'Faisalabad', lat: 31.4504, lng: 73.1350, timezone: 'Asia/Karachi'),
+  City(
+    name: 'Faisalabad',
+    lat: 31.4504,
+    lng: 73.1350,
+    timezone: 'Asia/Karachi',
+  ),
   City(name: 'Lahore', lat: 31.5204, lng: 74.3587, timezone: 'Asia/Karachi'),
   City(name: 'Karachi', lat: 24.8607, lng: 67.0011, timezone: 'Asia/Karachi'),
   City(name: 'Islamabad', lat: 33.6844, lng: 73.0479, timezone: 'Asia/Karachi'),
-  City(name: 'Rawalpindi', lat: 33.5651, lng: 73.0169, timezone: 'Asia/Karachi'),
+  City(
+    name: 'Rawalpindi',
+    lat: 33.5651,
+    lng: 73.0169,
+    timezone: 'Asia/Karachi',
+  ),
   City(name: 'Multan', lat: 30.1575, lng: 71.5249, timezone: 'Asia/Karachi'),
   City(name: 'Peshawar', lat: 34.0151, lng: 71.5249, timezone: 'Asia/Karachi'),
   City(name: 'Quetta', lat: 30.1798, lng: 66.9750, timezone: 'Asia/Karachi'),
   City(name: 'Sialkot', lat: 32.4945, lng: 74.5229, timezone: 'Asia/Karachi'),
-  City(name: 'Gujranwala', lat: 32.1877, lng: 74.1945, timezone: 'Asia/Karachi'),
+  City(
+    name: 'Gujranwala',
+    lat: 32.1877,
+    lng: 74.1945,
+    timezone: 'Asia/Karachi',
+  ),
 ];
 
 const List<City> saudiCities = [

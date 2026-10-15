@@ -57,7 +57,10 @@ class LegalDocScreen extends StatelessWidget {
       body: Directionality(
         textDirection: TextDirection.ltr,
         child: AppPage(
-          children: [Text(title, style: AppText.title), ..._blocks()],
+          children: [
+            Text(title, style: AppText.title),
+            ..._blocks(),
+          ],
         ),
       ),
     );

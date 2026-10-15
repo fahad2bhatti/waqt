@@ -9,6 +9,7 @@ import 'package:waqt/core/widgets/app_search_field.dart';
 import 'package:waqt/features/prayer_times/data/cities.dart';
 import 'package:waqt/features/prayer_times/data/countries.dart';
 import 'package:waqt/features/prayer_times/providers/city_provider.dart';
+import 'package:waqt/features/prayer_times/services/location_service.dart';
 
 class CitySearchScreen extends ConsumerStatefulWidget {
   const CitySearchScreen({super.key});
@@ -20,6 +21,7 @@ class CitySearchScreen extends ConsumerStatefulWidget {
 class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
   String _query = '';
   String? _selectedCountry;
+  bool _locating = false;
 
   // helper methods ke liye (build ka local `t` shadow karta hai)
   dynamic get t => ref.read(translationProvider);
@@ -29,15 +31,17 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
     final t = ref.watch(translationProvider);
     final query = _query.toLowerCase();
     final selectedCountry = _selectedCountry;
-    
+
     // Filter cities by country first
     List<City> allFilteredCities;
     if (selectedCountry != null && selectedCountry != 'DEFAULT') {
-      allFilteredCities = cities.where((city) => city.countryCode == selectedCountry).toList();
+      allFilteredCities = cities
+          .where((city) => city.countryCode == selectedCountry)
+          .toList();
     } else {
       allFilteredCities = cities;
     }
-    
+
     // Then filter by search query
     final results = [
       for (final city in allFilteredCities)
@@ -76,7 +80,10 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
                   ),
                 ),
                 dropdownColor: AppColors.background,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 15),
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 15,
+                ),
                 items: countries.map((country) {
                   return DropdownMenuItem(
                     value: country.code,
@@ -91,10 +98,8 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
               AppRow(
                 label: t('use_location'),
                 labelColor: AppColors.green,
-                onTap: () {
-                  // Navigate to location detection screen or show location modal
-                  _showLocationDetectionDialog();
-                },
+                value: _locating ? '...' : null,
+                onTap: _useCurrentLocation,
               ),
               Text(t('results'), style: AppText.label),
               Expanded(
@@ -121,33 +126,27 @@ class _CitySearchScreenState extends ConsumerState<CitySearchScreen> {
     );
   }
 
-  void _showLocationDetectionDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.card,
-        title: Text(
-          t('detect_location'),
-          style: const TextStyle(color: AppColors.textPrimary),
-        ),
+  Future<void> _useCurrentLocation() async {
+    if (_locating) return;
+    setState(() => _locating = true);
+    final city = await LocationService().detectCity();
+    if (!mounted) return;
+    setState(() => _locating = false);
+    final tr = ref.read(translationProvider);
+    if (city == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(tr('location_failed'))));
+      return;
+    }
+    ref.read(cityProvider.notifier).select(city);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
         content: Text(
-          t('permission_explanation'),
-          style: const TextStyle(color: AppColors.textMuted),
+          tr('location_auto_selected').replaceAll('{city}', city.name),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              t('cancel'),
-              style: const TextStyle(color: AppColors.textMuted),
-            ),
-          ),
-        ],
       ),
     );
-    
-    // TODO: Implement actual location detection
-    // This would call the location service to detect the user's position
-    // and auto-select the closest city
+    context.pop();
   }
 }
