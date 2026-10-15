@@ -45,8 +45,15 @@ class _AzanScreenState extends ConsumerState<AzanScreen> {
   @override
   Widget build(BuildContext context) => PopScope(
     canPop: false,
-    onPopInvokedWithResult: (didPop, _) {
-      if (!didPop) _close();
+    onPopInvokedWithResult: (didPop, _) async {
+      if (didPop) return;
+      // On the lock screen, back must not reveal the app. Stay on this screen
+      // while the Azan is active, so it is still here after unlocking.
+      if (ref.read(azanPlaybackProvider).active &&
+          await AzanBridge.isLocked()) {
+        return;
+      }
+      if (mounted) _close();
     },
     child: _body(context),
   );

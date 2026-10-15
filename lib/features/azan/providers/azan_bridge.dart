@@ -120,6 +120,16 @@ class AzanBridge {
     await _channel.invokeMethod('azanRemind', {'minutes': minutes});
   }
 
+  /// True while the phone is on the lock screen (Android only).
+  static Future<bool> isLocked() async {
+    if (AzanScheduler.isIos) return false;
+    try {
+      return await _channel.invokeMethod<bool>('isLocked') ?? false;
+    } on MissingPluginException {
+      return false;
+    }
+  }
+
   static Future<void> screenClosed() async {
     if (AzanScheduler.isIos) return;
     await _channel.invokeMethod('azanScreenClosed');

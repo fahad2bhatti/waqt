@@ -289,6 +289,9 @@ class TranslationService {
           'لوکیشن، بلاک کی گئی ایپس اور نماز کی ہسٹری کبھی اپ لوڈ نہیں ہوتی۔ صرف کریش رپورٹس بھیجی جاتی ہیں تاکہ ہم خرابیاں ٹھیک کر سکیں۔',
     },
     'version': {'en': 'Version', 'ur': 'ورژن'},
+    'report_problem': {'en': 'Report a problem', 'ur': 'مسئلہ رپورٹ کریں'},
+    'alerts_off': {'en': 'Azan alerts are off', 'ur': 'اذان کے الرٹس بند ہیں'},
+    'fix': {'en': 'Fix', 'ur': 'ٹھیک کریں'},
     'send_feedback': {'en': 'Send feedback', 'ur': 'رائے بھیجیں'},
     'open': {'en': 'Open', 'ur': 'کھولیں'},
     'link_error': {
@@ -331,6 +334,22 @@ class TranslationService {
     'health_fullScreenIntent': {
       'en': 'Full-screen notifications',
       'ur': 'فل اسکرین نوٹیفیکیشنز',
+    },
+    'azan_help': {'en': 'Azan not playing?', 'ur': 'اذان نہیں بج رہی؟'},
+    'azan_help_intro': {
+      'en':
+          'Some phones stop apps in the background. Follow these steps for your phone, then run the test with the screen off.',
+      'ur':
+          'کچھ فونز بیک گراؤنڈ میں ایپس بند کر دیتے ہیں۔ اپنے فون کے یہ مراحل مکمل کریں، پھر اسکرین بند کر کے ٹیسٹ چلائیں۔',
+    },
+    'azan_help_open': {'en': 'Open settings', 'ur': 'سیٹنگز کھولیں'},
+    'azan_help_test': {
+      'en': 'Test Azan in 1 minute',
+      'ur': '1 منٹ میں اذان ٹیسٹ کریں',
+    },
+    'azan_help_test_set': {
+      'en': 'Test Azan in 1 minute. Lock the phone now.',
+      'ur': 'ٹیسٹ اذان 1 منٹ میں بجے گی۔ ابھی فون لاک کر دیں۔',
     },
     'test_azan': {'en': 'Test Azan (10 s)', 'ur': 'اذان ٹیسٹ (10 سیکنڈ)'},
     'test_scheduled': {

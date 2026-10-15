@@ -41,7 +41,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       }
       if (missing == WaqtPermission.notifications) {
         final answer = await health.requestNotifications();
-        if (answer == NotificationAnswer.blocked) {
+        if (answer == NotificationAnswer.blocked ||
+            (answer == NotificationAnswer.granted &&
+                (await health.status())[WaqtPermission.notifications] !=
+                    true)) {
           await health.openSettings(missing);
         }
       } else {

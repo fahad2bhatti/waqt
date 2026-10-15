@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:waqt/core/config/features.dart';
 import 'package:waqt/app/theme/app_colors.dart';
@@ -7,6 +8,9 @@ import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/utils/time_format.dart';
 import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/core/widgets/app_page.dart';
+import 'package:waqt/core/widgets/app_row.dart';
+import 'package:waqt/features/health_check/providers/health_check_provider.dart';
+import 'package:waqt/features/onboarding/data/alert_permissions.dart';
 import 'package:waqt/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_mode_status_card.dart';
 import 'package:waqt/features/home/presentation/widgets/prayer_row.dart';
@@ -28,6 +32,8 @@ class HomeScreen extends ConsumerWidget {
     final appCount = ref.watch(blockedAppsProvider).length;
     final log = ref.read(prayerLogProvider.notifier);
     final t = ref.watch(translationProvider);
+    final alerts = ref.watch(permissionsProvider).value;
+    final alertsOff = alerts != null && nextMissingAlert(alerts) != null;
 
     return AppPage(
       children: [
@@ -46,6 +52,13 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
+        if (alertsOff)
+          AppRow(
+            label: t('alerts_off'),
+            value: t('fix'),
+            valueColor: AppColors.gold,
+            onTap: () => context.push('/health-check'),
+          ),
         NextPrayerCard(
           title: t('next_prayer'),
           name: t(next.name),

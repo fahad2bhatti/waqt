@@ -82,3 +82,7 @@ String formatLastFired(DateTime? fired, DateTime now) {
       : DateFormat('d MMM').format(fired);
   return 'Last Azan fired: $when, ${formatTime(fired)}';
 }
+
+final manufacturerProvider = FutureProvider<String>(
+  (ref) => ref.read(deviceHealthProvider).manufacturer(),
+);

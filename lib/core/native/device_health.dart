@@ -69,6 +69,19 @@ class DeviceHealth {
     }
   }
 
+  /// "Maker Model, Android 15 (API 35)" for problem reports, or '' if unknown.
+  Future<String> deviceInfo() async {
+    if (!_supported) return '';
+    try {
+      return await _channel.invokeMethod<String>('deviceInfo') ?? '';
+    } on MissingPluginException {
+      return '';
+    } on PlatformException catch (error) {
+      debugPrint('DeviceHealth.deviceInfo failed: ${error.message}');
+      return '';
+    }
+  }
+
   Future<DateTime?> lastAzanFired() async {
     if (!_supported) return null;
     try {
@@ -81,6 +94,31 @@ class DeviceHealth {
     } on PlatformException catch (error) {
       debugPrint('DeviceHealth.lastAzanFired failed: ${error.message}');
       return null;
+    }
+  }
+
+  /// Phone maker in lower case ("xiaomi", "samsung"...), or '' if unknown.
+  Future<String> manufacturer() async {
+    if (!_supported) return '';
+    try {
+      return await _channel.invokeMethod<String>('manufacturer') ?? '';
+    } on MissingPluginException {
+      return '';
+    } on PlatformException catch (error) {
+      debugPrint('DeviceHealth.manufacturer failed: ${error.message}');
+      return '';
+    }
+  }
+
+  /// Opens the phone maker's autostart page, or the app settings if there is none.
+  Future<void> openBrandSettings() async {
+    if (!_supported) return;
+    try {
+      await _channel.invokeMethod<void>('openBrandSettings');
+    } on MissingPluginException {
+      // Running in a test / non-native host.
+    } on PlatformException catch (error) {
+      debugPrint('DeviceHealth.openBrandSettings failed: ${error.message}');
     }
   }
 }

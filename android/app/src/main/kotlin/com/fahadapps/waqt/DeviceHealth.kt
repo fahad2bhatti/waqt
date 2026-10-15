@@ -14,7 +14,10 @@ import androidx.core.app.NotificationManagerCompat
 /** Real status of the permissions Azan and Prayer Mode depend on. */
 object DeviceHealth {
     fun status(context: Context): Map<String, Boolean> = mapOf(
-        "notifications" to NotificationManagerCompat.from(context).areNotificationsEnabled(),
+        "notifications" to (
+            NotificationManagerCompat.from(context).areNotificationsEnabled() &&
+                azanChannelsOn(context)
+            ),
         "exactAlarms" to exactAlarmsAllowed(context),
         "battery" to ignoringBatteryOptimizations(context),
         "usageAccess" to usageAccessGranted(context),
@@ -46,6 +49,40 @@ object DeviceHealth {
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri)
                 }
             else -> Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri)
+        }
+    }
+
+    /** Best-effort maker pages for autostart. Empty when the phone has none. */
+    fun brandIntents(): List<Intent> {
+        val pages = when (Build.MANUFACTURER.lowercase()) {
+            "xiaomi", "redmi", "poco" -> listOf(
+                "com.miui.securitycenter" to "com.miui.permcenter.autostart.AutoStartManagementActivity",
+            )
+            "oppo", "realme" -> listOf(
+                "com.coloros.safecenter" to "com.coloros.safecenter.permission.startup.StartupAppListActivity",
+                "com.oppo.safe" to "com.oppo.safe.permission.startup.StartupAppListActivity",
+            )
+            "vivo", "iqoo" -> listOf(
+                "com.vivo.permissionmanager" to "com.vivo.permissionmanager.activity.BgStartUpManagerActivity",
+                "com.iqoo.secure" to "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity",
+            )
+            "infinix", "tecno", "itel" -> listOf(
+                "com.transsion.phonemaster" to "com.cyin.himgr.autostart.AutoStartActivity",
+            )
+            else -> emptyList()
+        }
+        return pages.map { (pkg, cls) -> Intent().setClassName(pkg, cls) }
+    }
+
+    // The user (or the phone maker) can switch an Azan channel off on its own.
+    private fun azanChannelsOn(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < 26) return true
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE)
+            as android.app.NotificationManager
+        return listOf(AlarmScheduler.CHANNEL_ID, "azan_playing_v2").all { id ->
+            val channel = manager.getNotificationChannel(id)
+            channel == null ||
+                channel.importance != android.app.NotificationManager.IMPORTANCE_NONE
         }
     }
 
