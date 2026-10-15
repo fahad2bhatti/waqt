@@ -49,6 +49,28 @@ object DeviceHealth {
         }
     }
 
+    /** Best-effort maker pages for autostart. Empty when the phone has none. */
+    fun brandIntents(): List<Intent> {
+        val pages = when (Build.MANUFACTURER.lowercase()) {
+            "xiaomi", "redmi", "poco" -> listOf(
+                "com.miui.securitycenter" to "com.miui.permcenter.autostart.AutoStartManagementActivity",
+            )
+            "oppo", "realme" -> listOf(
+                "com.coloros.safecenter" to "com.coloros.safecenter.permission.startup.StartupAppListActivity",
+                "com.oppo.safe" to "com.oppo.safe.permission.startup.StartupAppListActivity",
+            )
+            "vivo", "iqoo" -> listOf(
+                "com.vivo.permissionmanager" to "com.vivo.permissionmanager.activity.BgStartUpManagerActivity",
+                "com.iqoo.secure" to "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity",
+            )
+            "infinix", "tecno", "itel" -> listOf(
+                "com.transsion.phonemaster" to "com.cyin.himgr.autostart.AutoStartActivity",
+            )
+            else -> emptyList()
+        }
+        return pages.map { (pkg, cls) -> Intent().setClassName(pkg, cls) }
+    }
+
     // Android 14+ can turn this off; older versions always allow it.
     private fun fullScreenIntentAllowed(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < 34) return true

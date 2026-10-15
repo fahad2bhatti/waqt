@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:waqt/app/shell/app_shell.dart';
 import 'package:waqt/core/legal/legal_text.dart';
 import 'package:waqt/features/azan/presentation/screens/azan_screen.dart';
+import 'package:waqt/features/health_check/presentation/screens/azan_help_screen.dart';
 import 'package:waqt/features/health_check/presentation/screens/health_check_screen.dart';
 import 'package:waqt/features/home/presentation/screens/home_screen.dart';
 import 'package:waqt/features/legal/presentation/screens/agreement_screen.dart';
@@ -45,6 +46,7 @@ final appRouter = GoRouter(
       path: '/health-check',
       builder: (_, _) => const HealthCheckScreen(),
     ),
+    GoRoute(path: '/azan-help', builder: (_, _) => const AzanHelpScreen()),
     GoRoute(path: '/qibla', builder: (_, _) => const QiblaScreen()),
     GoRoute(path: '/apps', builder: (_, _) => const AppPickerScreen()),
     GoRoute(

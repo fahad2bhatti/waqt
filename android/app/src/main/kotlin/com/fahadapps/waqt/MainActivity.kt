@@ -264,6 +264,30 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
 
+                    "manufacturer" -> result.success(android.os.Build.MANUFACTURER.lowercase())
+
+                    "openBrandSettings" -> {
+                        var opened = false
+                        for (intent in DeviceHealth.brandIntents()) {
+                            try {
+                                startActivity(intent)
+                                opened = true
+                                break
+                            } catch (e: Exception) {
+                                // Not on this phone: try the next page.
+                            }
+                        }
+                        if (!opened) {
+                            startActivity(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:$packageName"),
+                                ),
+                            )
+                        }
+                        result.success(null)
+                    }
+
                     "lastAzanFired" -> {
                         val millis = getSharedPreferences("waqt_azan", Context.MODE_PRIVATE)
                             .getLong("last_fired", 0L)

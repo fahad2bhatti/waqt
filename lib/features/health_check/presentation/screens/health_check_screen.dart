@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:waqt/app/theme/app_colors.dart';
 import 'package:waqt/app/theme/app_text.dart';
 import 'package:waqt/core/native/azan_scheduler.dart';
@@ -44,6 +45,10 @@ class HealthCheckScreen extends ConsumerWidget {
                             .openSettings(check.permission),
                 ),
             ],
+          ),
+          AppRow(
+            label: t('azan_help'),
+            onTap: () => context.push('/azan-help'),
           ),
           const SizedBox(height: 24),
           FilledButton(
