@@ -102,7 +102,7 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => showLicensePage(
                 context: context,
                 applicationName: 'Waqt',
-                applicationVersion: '1.0.0',
+                applicationVersion: '1.0.1',
               ),
             ),
             AppRow(

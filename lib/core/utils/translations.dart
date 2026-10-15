@@ -289,6 +289,9 @@ class TranslationService {
           'لوکیشن، بلاک کی گئی ایپس اور نماز کی ہسٹری کبھی اپ لوڈ نہیں ہوتی۔ صرف کریش رپورٹس بھیجی جاتی ہیں تاکہ ہم خرابیاں ٹھیک کر سکیں۔',
     },
     'version': {'en': 'Version', 'ur': 'ورژن'},
+    'report_problem': {'en': 'Report a problem', 'ur': 'مسئلہ رپورٹ کریں'},
+    'alerts_off': {'en': 'Azan alerts are off', 'ur': 'اذان کے الرٹس بند ہیں'},
+    'fix': {'en': 'Fix', 'ur': 'ٹھیک کریں'},
     'send_feedback': {'en': 'Send feedback', 'ur': 'رائے بھیجیں'},
     'open': {'en': 'Open', 'ur': 'کھولیں'},
     'link_error': {

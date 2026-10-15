@@ -69,6 +69,19 @@ class DeviceHealth {
     }
   }
 
+  /// "Maker Model, Android 15 (API 35)" for problem reports, or '' if unknown.
+  Future<String> deviceInfo() async {
+    if (!_supported) return '';
+    try {
+      return await _channel.invokeMethod<String>('deviceInfo') ?? '';
+    } on MissingPluginException {
+      return '';
+    } on PlatformException catch (error) {
+      debugPrint('DeviceHealth.deviceInfo failed: ${error.message}');
+      return '';
+    }
+  }
+
   Future<DateTime?> lastAzanFired() async {
     if (!_supported) return null;
     try {

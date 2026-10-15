@@ -8,8 +8,10 @@ import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/core/widgets/app_page.dart';
 import 'package:waqt/core/widgets/app_row.dart';
 import 'package:waqt/core/widgets/info_card.dart';
+import 'package:waqt/features/health_check/providers/health_check_provider.dart';
+import 'package:waqt/features/onboarding/data/alert_permissions.dart';
 
-const _appVersion = '1.0.0';
+const _appVersion = '1.0.1';
 
 class AboutScreen extends ConsumerWidget {
   const AboutScreen({super.key});
@@ -26,6 +28,30 @@ class AboutScreen extends ConsumerWidget {
         context,
       ).showSnackBar(SnackBar(content: Text(errorText)));
     }
+  }
+
+  Future<void> _report(
+    BuildContext context,
+    WidgetRef ref,
+    String Function(String) t,
+  ) async {
+    final health = ref.read(deviceHealthProvider);
+    final device = await health.deviceInfo();
+    final status = await health.status();
+    final permissions = [
+      for (final p in alertPermissions)
+        '${p.name}: ${status[p] == true ? 'ok' : 'OFF'}',
+    ].join(', ');
+    final body =
+        'Describe the problem:\n\n\n---\nWaqt $_appVersion\nPhone: $device\nPermissions: $permissions\n';
+    if (!context.mounted) return;
+    await _open(
+      context,
+      Uri.parse(
+        'mailto:$kFeedbackEmail?subject=${Uri.encodeComponent('Waqt problem report')}&body=${Uri.encodeComponent(body)}',
+      ),
+      t('link_error'),
+    );
   }
 
   @override
@@ -56,6 +82,13 @@ class AboutScreen extends ConsumerWidget {
                     Uri.parse('mailto:$kFeedbackEmail?subject=Waqt%20feedback'),
                     t('link_error'),
                   ),
+                ),
+              if (kFeedbackEmail.isNotEmpty)
+                AppRow(
+                  label: t('report_problem'),
+                  value: t('open'),
+                  valueColor: AppColors.gold,
+                  onTap: () => _report(context, ref, t),
                 ),
             ],
           ),

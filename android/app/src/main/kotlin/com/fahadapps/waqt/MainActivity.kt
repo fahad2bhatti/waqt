@@ -208,6 +208,12 @@ class MainActivity : FlutterActivity() {
                     result.success(null)
                 }
 
+                "isLocked" -> {
+                    val keyguard = getSystemService(Context.KEYGUARD_SERVICE)
+                        as android.app.KeyguardManager
+                    result.success(keyguard.isKeyguardLocked)
+                }
+
                 "azanToggle" -> {
                     sendToAzanService(AzanService.ACTION_TOGGLE)
                     result.success(null)
@@ -287,6 +293,12 @@ class MainActivity : FlutterActivity() {
                         }
                         result.success(null)
                     }
+
+                    "deviceInfo" -> result.success(
+                        "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}, " +
+                            "Android ${android.os.Build.VERSION.RELEASE} " +
+                            "(API ${android.os.Build.VERSION.SDK_INT})",
+                    )
 
                     "lastAzanFired" -> {
                         val millis = getSharedPreferences("waqt_azan", Context.MODE_PRIVATE)
