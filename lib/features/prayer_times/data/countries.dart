@@ -47,7 +47,6 @@ const List<Country> countries = [
   ),
 ];
 
-
 City? getCityForPlayStoreCountry(String code) {
   for (final c in countries) {
     if (c.code == code) return c.cities.isEmpty ? null : c.cities.first;

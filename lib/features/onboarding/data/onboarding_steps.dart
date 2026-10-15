@@ -12,6 +12,7 @@ class OnboardingStep {
     this.rows = const [],
     this.rowColor = AppColors.textMuted,
     this.requestsAlerts = false,
+    this.requestsLocation = false,
   });
 
   final String title;
@@ -24,6 +25,9 @@ class OnboardingStep {
 
   /// True for the step that asks for the Azan permissions.
   final bool requestsAlerts;
+
+  /// True for the step that detects the city from the device location.
+  final bool requestsLocation;
 }
 
 const onboardingSteps = [
@@ -39,6 +43,7 @@ const onboardingSteps = [
     primary: 'Allow location',
     secondary: 'Choose city manually',
     secondaryRoute: '/city-search',
+    requestsLocation: true,
   ),
   OnboardingStep(
     title: 'Calculation settings',

@@ -11,6 +11,8 @@ import 'package:waqt/core/utils/translations.dart';
 import 'package:waqt/features/health_check/providers/health_check_provider.dart';
 import 'package:waqt/features/onboarding/data/alert_permissions.dart';
 import 'package:waqt/features/onboarding/data/onboarding_steps.dart';
+import 'package:waqt/features/prayer_times/providers/city_provider.dart';
+import 'package:waqt/features/prayer_times/services/location_service.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -46,6 +48,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         await health.openSettings(missing);
       }
       if (mounted) await ref.read(permissionsProvider.notifier).refresh();
+    } finally {
+      _busy = false;
+    }
+  }
+
+  /// Detects the nearest supported city. On failure the user stays on this
+  /// step and can retry or choose a city manually.
+  Future<void> _useLocation() async {
+    if (_busy) return;
+    _busy = true;
+    try {
+      final city = await LocationService().detectCity();
+      if (!mounted) return;
+      if (city == null) {
+        final t = ref.read(translationProvider);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t('location_failed'))));
+        return;
+      }
+      ref.read(cityProvider.notifier).select(city);
+      _next();
     } finally {
       _busy = false;
     }
@@ -151,6 +175,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               FilledButton(
                 onPressed: step.requestsAlerts && !alertsDone
                     ? _enableAlerts
+                    : step.requestsLocation
+                    ? _useLocation
                     : _next,
                 child: Text(
                   alertsDone
@@ -162,7 +188,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 TextButton(
                   onPressed: step.secondaryRoute == null
                       ? _next
-                      : () => context.push(step.secondaryRoute!),
+                      : () async {
+                          await context.push(step.secondaryRoute!);
+                          if (mounted &&
+                              ref
+                                      .read(prefsProvider)
+                                      .getString(PrefKeys.city) !=
+                                  null) {
+                            _next();
+                          }
+                        },
                   child: Text(_translateStepSecondary(_step, t)),
                 ),
             ],

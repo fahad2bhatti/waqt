@@ -59,12 +59,12 @@ final appRouter = GoRouter(
     ),
     GoRoute(path: '/calculation', builder: (_, _) => const CalculationScreen()),
     GoRoute(path: '/language', builder: (_, _) => const LanguageScreen()),
-    GoRoute(path: '/country', builder: (_, _) => const CountrySelectionScreen()),
-    GoRoute(path: '/about', builder: (_, _) => const AboutScreen()),
     GoRoute(
-      path: '/prayer-log',
-      builder: (_, _) => const PrayerLogScreen(),
+      path: '/country',
+      builder: (_, _) => const CountrySelectionScreen(),
     ),
+    GoRoute(path: '/about', builder: (_, _) => const AboutScreen()),
+    GoRoute(path: '/prayer-log', builder: (_, _) => const PrayerLogScreen()),
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => AppShell(navigationShell: shell),
       branches: [

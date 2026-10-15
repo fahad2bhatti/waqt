@@ -78,7 +78,8 @@ class _AgreementScreenState extends ConsumerState<AgreementScreen> {
                 ),
                 CheckboxListTile(
                   value: _agreed,
-                  onChanged: (value) => setState(() => _agreed = value ?? false),
+                  onChanged: (value) =>
+                      setState(() => _agreed = value ?? false),
                   controlAffinity: ListTileControlAffinity.leading,
                   contentPadding: EdgeInsets.zero,
                   activeColor: AppColors.gold,
